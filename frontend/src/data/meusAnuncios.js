@@ -1,0 +1,33 @@
+export default [
+      {
+        id_user: 2,
+        id_ad: 1,
+        name: "Porshe",
+        by: "Pedro Henrique",
+        price: "R$12340",
+        color: "Azul Marinho",
+        endereço: "Avenida Paulista 410",
+        troca: "Aceito troca",
+        combustivel: "flex",
+        km: "121314km",
+        model: "Uno",
+        year: "2000",
+        img: require("./../../assets/img5.png"),
+      },
+   
+      {
+        id_user: 2,
+        id_ad: 1,
+        name: "Fusca",
+        by: "Pedro Henrique",
+        price: "R$12340",
+        color: "Prata",
+        endereço: "Rua Eliseu Cassiopeia 14",
+        troca: "Não aceito troca",
+        combustivel: "Gasolina",
+        km: "0km",
+        model: "Weekend",
+        year: "2000",
+        img: require("./../../assets/img7.png"),
+      },
+]
