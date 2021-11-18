@@ -68,6 +68,7 @@ const Ads = ({ navigation, route }) => {
     }
   }, [searchText]);
 
+
   //Rota de pegar anuncio
   const getAnuncio = async (cpf_anunciante) => {
     const res = await fetch(
@@ -79,7 +80,10 @@ const Ads = ({ navigation, route }) => {
   };
 
   //Carregando sempre a rota de pegar anuncio
-  useEffect(() => {});
+  useEffect(() => {
+
+    
+  });
 
   return (
     <HeadContainer>
@@ -97,6 +101,7 @@ const Ads = ({ navigation, route }) => {
 
           <FlatList
             data={list}
+            
             //Rendereziar somente o item do valor pedro henrique
             renderItem={({ item }) => (
               <Item onPress={() => showDetails(item)}>

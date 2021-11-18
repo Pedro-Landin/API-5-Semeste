@@ -63,7 +63,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     if (searchText === "") {
       getAnuncios();
-      setList(list);
+     setList(list);
     } else {
       setList(
         list.filter(
@@ -80,7 +80,9 @@ const Home = ({ navigation }) => {
     setList(anuncios);
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+
+  }, []);
 
   return (
     <HeadContainer>

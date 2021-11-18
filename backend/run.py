@@ -38,7 +38,6 @@ class Cadastro:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(FROM, PASSWORD)
-        print("Login funfou")
         server.sendmail(FROM, TO, BODY)
         print("Email enviado para", TO)
         server.quit()
@@ -61,7 +60,6 @@ class Cadastro:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(FROM, PASSWORD)
-        print("Login funfou")
         server.sendmail(FROM, TO, BODY)
         print("Email enviado para", TO)
         server.quit()
@@ -71,8 +69,8 @@ data = 1
         
 @app.route('/create/user', methods=['POST'])
 def create():
-    if 'arq_do_cara' in request.files: 
-        arquivo = request.files['arq_do_cara']     
+    if 'arq' in request.files: 
+        arquivo = request.files['arq']     
         df = pd.read_csv(arquivo)
         data = df.to_dict(orient="records")
         cod = 6
@@ -88,31 +86,58 @@ def create():
         while x < (len(data)):
             data[x]['id'] = mongo.db.usuarios.count()
             data[x]['senha'] = ''.join(random.choice(string.digits) for x in range(cod))
+            data[x]['status'] = 0
+            data[x]['cod'] = 0
+            data[x]['atividade'] = 0
+
+            email = data[x]['email']
+            senha = data[x]['senha']
+            print(email)
+            print(senha)
+            Cadastro.sender_email(email, senha)
             mongo.db.usuarios.insert_one(data[x])
             x+=1       
-            b = 0
-        while b < (len(data)):
-            email = data[b]['email']
-            senha = data[b]['senha']
-            b+=1
-            Cadastro.sender_email(email, senha)
-            return 'Arquivo enviado com sucesso!'
+       
+        return 'Arquivo enviado com sucesso!'
 
 
     
 #lista todos os usuarios
 @app.route('/listar/usuarios', methods = ["GET"])
 def users():
-    users = mongo.db.usuarios.find({})
-    resp = dumps(users)
-    return resp
+    users = []
+    for usuario in mongo.db.usuarios.find():
+        users.append({
+            '_id' : str(ObjectId(usuario['_id'])),
+            'nome' : usuario['nome'],
+            'cpf' : usuario['cpf'],
+            'email' : usuario['email'],
+            'telefone' : usuario['telefone'],
+            'endereco' : usuario['endereco'],
+            'id': usuario['id'],
+            'senha' : usuario['senha'],
+            'status' : usuario['status'],
+            'cod' : usuario['cod'],
+            'atividade' : usuario['atividade']})
+        
+    return jsonify(users)
 
 #lista usuario por id
 @app.route('/listar/usuario/<id>', methods = ["GET"])
 def user(id):
-    users = mongo.db.usuarios.find({'id':int(id)})
-    resp = dumps(users)
-    return resp
+    usuario = mongo.db.usuarios.find_one({'id':int(id)})
+    return ({
+            '_id' : str(ObjectId(usuario['_id'])),
+            'nome' : usuario['nome'],
+            'cpf' : usuario['cpf'],
+            'email' : usuario['email'],
+            'telefone' : usuario['telefone'],
+            'endereco' : usuario['endereco'],
+            'id': usuario['id'],
+            'senha' : usuario['senha'],
+            'status' : usuario['status'],
+            'cod' : usuario['cod'],
+            'atividade' : usuario['atividade']})
 
 #atualiza usuario
 @app.route('/atualizar/usuario/<id>', methods=["PUT"])
@@ -138,16 +163,13 @@ def update_user(id):
                                 'status': _status,
                                 'cod': _cod,
                                 'atividade': _atividade}})
-    resp = jsonify("Usuario atualizada com sucesso")
-    return resp
+    return "200"
 #exclui usuario
 @app.route('/deletar/usuario/<id>', methods=["PUT"])
 def delete_user(id):
-    _json = request.json
-    _atividade = _json['atividade']
-    mongo.db.usuarios.find_one_and_update(
-        {'id':int(id)}, {"$set":{'atividade': _atividade}})
-    resp = jsonify("usuario atualizado")
+
+    mongo.db.usuarios.find_one_and_delete({'id':int(id)})
+    resp = jsonify("usuario deletado ")
     return resp
 
 #login
@@ -158,7 +180,7 @@ def login_user():
     _email = _json['email']
     _senha = _json['senha']
 
-    find_user = mongo.db.usuarios.find({'email' : _email, 'senha' : _senha})
+    find_user = mongo.db.usuarios.find({'email' : _email, 'senha': _senha})
     not_found = jsonify("usuario não encontrado")
     resp = dumps(find_user)
 
@@ -173,7 +195,7 @@ def update_senha(id):
     _json = request.json
     _senha = _json['senha']
     mongo.db.usuarios.find_one_and_update(
-        {'id':int(id)}, {"$set":{'senha': _senha}})
+        {'id':int(id)}, {"$set":{'senha': _senha, 'status': 1}})
     resp = jsonify("senha atualizada com sucesso")
     return resp
 
@@ -207,12 +229,12 @@ def create_anuncio():
         dfa = pd.read_csv(anuncio)
         data_anuncio = dfa.to_dict(orient="records")  
         dfa['id'] = 0 
-        dfa['img'] = 'https://th.bing.com/th/id/R.fec6e407bf5e2d8c7a7a5519815d5656?rik=tlDK22b8zAwMYg&riu=http%3a%2f%2fbestcars.uol.com.br%2fbc%2fwp-content%2fuploads%2f2013%2f09%2fFiat-Palio-Fire-Italia-01.jpg&ehk=XtcmILycKE6YzWmTK%2b9dXitDVI7%2b%2f7QEEHpPy47gki8%3d&risl=&pid=ImgRaw&r=0'
+        dfa['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
         x=0
         dfa = pd.DataFrame(data_anuncio) 
         while x < (len(data_anuncio)):
             data_anuncio[x]['id'] = mongo.db.anuncios.count()
-            data_anuncio[x]['img'] = 'https://th.bing.com/th/id/R.fec6e407bf5e2d8c7a7a5519815d5656?rik=tlDK22b8zAwMYg&riu=http%3a%2f%2fbestcars.uol.com.br%2fbc%2fwp-content%2fuploads%2f2013%2f09%2fFiat-Palio-Fire-Italia-01.jpg&ehk=XtcmILycKE6YzWmTK%2b9dXitDVI7%2b%2f7QEEHpPy47gki8%3d&risl=&pid=ImgRaw&r=0'
+            data_anuncio[x]['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
             mongo.db.anuncios.insert_one(data_anuncio[x])
             x+=1     
     return 'Arquivo enviado com sucesso!'
@@ -240,29 +262,9 @@ def lista_anuncio():
 #lista anuncio por cpf do usuario
 @app.route('/listar/anuncio/<cpf_anunciante>', methods = ["GET"])
 def anuncio(cpf_anunciante):
-    anuncios = []
-    for doc in mongo.db.anuncios.find({'cpf_anunciante': int(cpf_anunciante)}):
-        anuncios.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'fabricante': doc['fabricante'],
-            'desc_marca': doc['desc_marca'],
-            'desc_veiculo': doc['desc_veiculo'],
-            'cod_anunciante': doc['cod_anunciante'],
-            'ano_fabricacao': doc['ano_fabricacao'],
-            'ano_modelo': doc['ano_modelo'],
-            'cpf_anunciante': doc['cpf_anunciante'],
-            'valor_veiculo': doc['valor_veiculo'],
-            'id': doc['id'],
-            'img': doc['img']
-        })
-    return jsonify(anuncios)
-  
-#Lista anuncio especifico
-@app.route('/anuncio/<id>', methods=['GET'])
-def getAnuncio(id):
-  anuncios = mongo.db.anuncios.find_one({'id': int(id)})
-  return jsonify({
-     '_id': str(ObjectId(anuncios['_id'])),
+    anuncios = mongo.db.anuncios.find_one({'cpf_anunciante': int(cpf_anunciante)})
+    return jsonify({ 
+      '_id': str(ObjectId(anuncios['_id'])),
       'fabricante' : anuncios['fabricante'],
       'desc_marca': anuncios['desc_marca'], 
       'desc_veiculo': anuncios['desc_veiculo'],
@@ -274,6 +276,23 @@ def getAnuncio(id):
       'id': anuncios['id'],
       'img': anuncios['img']
   })
+  
+#Lista anuncio especifico
+@app.route('/anuncio/<id>', methods=['GET'])
+def getAnuncio(id):
+  anuncio = mongo.db.anuncios.find_one({'id': int(id)})
+  return jsonify({
+     '_id': str(ObjectId(anuncio['_id'])),
+      'fabricante' : anuncio['_fabricante'],
+      'desc_marca': anuncio['_desc_marca'], 
+      'desc_veiculo': anuncio['desc_veiculo'],
+      'cod_anunciante': anuncio['cod_anunciante'],
+      'ano_fabricacao': anuncio['ano_fabricacao'],
+      'ano_modelo': anuncio[ 'ano_modelo'],
+      'cpf_anunciante': anuncio['cpf_anunciante'],
+      'valor_veiculo': anuncio['valor_veiculo']
+     
+  })
 
 #exclui anuncio
 @app.route('/anuncios/<id>', methods=['DELETE'])
@@ -283,26 +302,19 @@ def deleteAnuncios(id):
 
 @app.route('/atualizar/anuncio/<id>', methods=["PUT"])
 def updateAnuncios(id):
-    
-    json = request.json
-    _fabricante = json['fabricante']
-    _desc_marca = json['desc_marca']
-    _desc_veiculo = json['desc_veiculo']
-    _cod_anunciante = json['cod_anunciante']
-    _ano_fabricacao = json['ano_fabricacao']
-    _ano_modelo = json['ano_modelo']
-    _valor_veiculo = json['valor_veiculo']
-    
-    mongo.db.anuncios.find_one_and_update(
-        {'id': int(id)}, {"$set": {
-            
-         'fabricante': _fabricante,
-         'desc_marca': _desc_marca,
-         'desc_veiculo': _desc_veiculo,
-         'cod_anunciante': _cod_anunciante,
-         'ano_fabricacao': _ano_fabricacao,
-         'ano_modelo': _ano_modelo,
-         'valor_veiculo': _valor_veiculo}})
-    return jsonify({'message': 'Anuncio atualizado'})
+     print(request.json)
+     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {
+         'fabricante': request.json['fabricante'],
+         'desc_marca': request.json['desc_marca'],
+         'desc_veiculo': request.json['desc_veiculo'],
+         'cod_anunciante': request.json['cod_anunciante'],
+         'ano_fabricacao': request.json['ano_fabricacao'],
+         'ano_modelo': request.json['ano_modelo'],
+         'cpf_anunciante': request.json['cpf_anunciante'],
+         'valor_veiculo': request.json['valor_veiculo'],
+         'id': request.json['id'],
+         'img': request.json['img']}})
+     return jsonify({'message': 'Anuncio atualizado'})
+ 
 if __name__ == "__main__":
     app.run()
