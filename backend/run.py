@@ -227,12 +227,14 @@ def create_anuncio():
     if 'anuncio' in request.files:
         anuncio = request.files['anuncio']     
         dfa = pd.read_csv(anuncio)
-        data_anuncio = dfa.to_dict(orient="records")  
+        data_anuncio = dfa.to_dict(orient="records")
+        dfa['visualizacao'] = 1  
         dfa['id'] = 0 
         dfa['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
         x=0
         dfa = pd.DataFrame(data_anuncio) 
         while x < (len(data_anuncio)):
+            dfa['visualizacao'] = 1 
             data_anuncio[x]['id'] = mongo.db.anuncios.count()
             data_anuncio[x]['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
             mongo.db.anuncios.insert_one(data_anuncio[x])
@@ -244,19 +246,20 @@ def create_anuncio():
 def lista_anuncio():
     anuncios = []
     for doc in mongo.db.anuncios.find():
-        anuncios.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'fabricante': doc['fabricante'],
-            'desc_marca': doc['desc_marca'],
-            'desc_veiculo': doc['desc_veiculo'],
-            'cod_anunciante': doc['cod_anunciante'],
-            'ano_fabricacao': doc['ano_fabricacao'],
-            'ano_modelo': doc['ano_modelo'],
-            'cpf_anunciante': doc['cpf_anunciante'],
-            'valor_veiculo': doc['valor_veiculo'],
-            'id': doc['id'],
-            'img': doc['img']
-        })
+        if doc['vizualizacao'] == 1:
+            anuncios.append({
+                '_id': str(ObjectId(doc['_id'])),
+                'fabricante': doc['fabricante'],
+                'desc_marca': doc['desc_marca'],
+                'desc_veiculo': doc['desc_veiculo'],
+                'cod_anunciante': doc['cod_anunciante'],
+                'ano_fabricacao': doc['ano_fabricacao'],
+                'ano_modelo': doc['ano_modelo'],
+                'cpf_anunciante': doc['cpf_anunciante'],
+                'valor_veiculo': doc['valor_veiculo'],
+                'id': doc['id'],
+                'img': doc['img']
+            })
     return jsonify(anuncios)
 
 #lista anuncio por cpf do usuario
@@ -313,7 +316,8 @@ def updateAnuncios(id):
          'cpf_anunciante': request.json['cpf_anunciante'],
          'valor_veiculo': request.json['valor_veiculo'],
          'id': request.json['id'],
-         'img': request.json['img']}})
+         'img': request.json['img'],
+         'vizualizacao': request.json['vizualizacao']}})
      return jsonify({'message': 'Anuncio atualizado'})
  
 if __name__ == "__main__":
