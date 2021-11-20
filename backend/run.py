@@ -311,7 +311,6 @@ def deleteAnuncios(id):
 
 @app.route('/atualizar/anuncio/<id>', methods=["PUT"])
 def updateAnuncios(id):
-     print(request.json)
      mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {
          'fabricante': request.json['fabricante'],
          'desc_marca': request.json['desc_marca'],
@@ -326,6 +325,12 @@ def updateAnuncios(id):
          'views': request.json['views'],
          'visualizacao': request.json['visualizacao']}})
      return jsonify({'message': 'Anuncio atualizado'})
+
+@app.route('/atualizar/view/<id>', methods=["PUT"])
+def updateViewAnuncio(id):
+     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {'views': request.json['views']}})
+     view = mongo.db.anuncios.find_one({'id': int(id)})
+     return jsonify({'views': view['views']})
  
 if __name__ == "__main__":
     app.run()
