@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   SubTitle,
@@ -6,44 +6,156 @@ import {
   ButtonText,
 } from "../../components/styles";
 import { StatusBar } from "expo-status-bar";
-import { CredentialsContext } from "../../context/credentials";
-import { View } from "react-native";
+//import { Dimensions, FlatList, View } from "react-native";
 import Header from "../../components/header";
-import { HeadContainer } from "../../components/style";
-import Anuncios from "../../data/anuncios";
+import { HeadContainer, Item } from "../../components/style";
+import ListaHorizontal from "../../components/FlatList/ListaHorizontal";
+import {
+  BasicContainer,
+  ItemImage,
+  ItemTitle,
+  ItemText,
+  ContainerInfo,
+  ContainerAnuncio,
+} from "../../components/style";
 
-const Home = () => {
-  const [list, setList] = useState(Anuncios);
-  const { storedCredentials, setStoredCredentials } =
-    useContext(CredentialsContext);
-  const adm = true;
-  const { name, email, cpf} = storedCredentials;
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  TextInput,
+  FlatList,
+} from "react-native";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useAuth } from "../../context/auth";
+
+//const { width} = Dimensions.get('window');
+const Home = ({navigation}) => {
+  const [list, setList] = useState();
+  const { user, setUser } = useAuth();
+
+  const { email, nome } = user;
+
+  //Passando para imagem de detalhes do anuncio
+  const showDetails = (item) => {
+    navigation.navigate("Details", { ...item });
+  };
+
+
+  const getAnuncios = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/listar/anuncios`);
+    const anuncios = await res.json();
+    setList(anuncios);
+  };
+
+  useEffect(() => {
+    getAnuncios();
+  }, []);
 
   return (
-    <HeadContainer>
-      <Header />
-      <Container>
-        <StatusBar style="dark" />
+    <ImageBackground
+      source={require("../images/back.png")}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <View style={{ paddingHorizontal: 40, marginTop: 25 }}>
+        <Text
+          style={{
+            fontSize: 40,
+            color: "#522289",
+            fontFamily: "RobotoBold",
+          }}
+        >
+          Bem Vindo {nome}
+        </Text>
 
-        <SubTitle>Bem-vindo, {name}</SubTitle>
-        <View>
+        <View style={{ alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 15,
+              paddingVertical: 10,
 
-        <form //Rota do banco python
-            action="http://127.0.0.1:5000/create/user"
-            method="POST"
-            encType="multipart/form-data"
+              lineHeight: 22,
+              fontFamily: "RobotoRegular",
+              color: "#a2a2db",
+            }}
           >
-            <input type="file" id="arq" name="arq" />
-            <input type="submit" defaultValue="Submit" />
-          </form>
+            Você tem um total de
+          </Text>
 
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("Detail")}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: 66,
+              width: 66,
+              borderRadius: 50,
+              backgroundColor: "#5facdb",
+            }}
+          >
+            12
+          </TouchableOpacity>
 
-          <Button>
-            <ButtonText>UPLOAD ANUNCIOS</ButtonText>
-          </Button>
+          <Text
+            style={{
+              fontSize: 15,
+              paddingVertical: 10,
+
+              lineHeight: 22,
+              fontFamily: "RobotoRegular",
+              color: "#a2a2db",
+            }}
+          >
+            Anuncios ativos
+          </Text>
         </View>
-      </Container>
-    </HeadContainer>
+      
+
+        <Text
+          style={{
+            color: "#FFF",
+            fontFamily: "RobotoRegular",
+            marginTop: 50,
+            fontSize: 17,
+          }}
+        >
+          Recomendados
+        </Text>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginHorizontal: -40, marginTop: 30 }}
+        >
+          <FlatList
+            horizontal
+            snapToAlignment={"start"}
+            data={list}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  backgroundColor: "#FEFEFE",
+                  height: 230,
+                  width: 210,
+                  borderRadius: 15,
+                  marginHorizontal: 10,
+                  padding: 0.5,
+                }}
+              >
+                <Item onPress={() => showDetails(item)}>
+                  <ItemImage source={item.img} />
+                  <ItemTitle>{item.fabricante}</ItemTitle>
+                  <ItemText>Ano do modelo: {item.ano_modelo}</ItemText>
+                  <ItemText>Valor: {item.valor_veiculo}$</ItemText>
+                </Item>
+              </View>
+            )}
+          />
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 };
 

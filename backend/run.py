@@ -21,6 +21,8 @@ mongo = PyMongo(app)
 CORS(app)
 
 
+
+
 class Cadastro:    
     def sender_email(email, senha):
         SUBJECT = "Cadastro realizado com sucesso!!!"
@@ -148,22 +150,18 @@ def update_user(id):
     _email = _json['email']
     _telefone = _json['telefone']
     _endereco = _json['endereco']
-    _senha = _json['senha']
-    _status = _json['status']
-    _cod = _json['cod']
-    _atividade = _json['atividade']
-    mongo.db.usuarios.find_one_and_update(
+   
+    find_user =mongo.db.usuarios.find_one_and_update(
         {'id':int(id)}, {"$set":{
                                 'nome' : _nome,
                                 'cpf': _cpf, 
                                 'email': _email,
                                 'telefone': _telefone,
-                                'endereco': _endereco,
-                                'senha': _senha,
-                                'status': _status,
-                                'cod': _cod,
-                                'atividade': _atividade}})
-    return "200"
+                                'endereco': _endereco,}})
+   
+    resp = dumps(find_user)
+    print(resp)
+    return resp
 #exclui usuario
 @app.route('/deletar/usuario/<id>', methods=["PUT"])
 def delete_user(id):
@@ -311,7 +309,6 @@ def deleteAnuncios(id):
 
 @app.route('/atualizar/anuncio/<id>', methods=["PUT"])
 def updateAnuncios(id):
-     print(request.json)
      mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {
          'fabricante': request.json['fabricante'],
          'desc_marca': request.json['desc_marca'],
@@ -319,13 +316,27 @@ def updateAnuncios(id):
          'cod_anunciante': request.json['cod_anunciante'],
          'ano_fabricacao': request.json['ano_fabricacao'],
          'ano_modelo': request.json['ano_modelo'],
-         'cpf_anunciante': request.json['cpf_anunciante'],
+        
          'valor_veiculo': request.json['valor_veiculo'],
-         'id': request.json['id'],
-         'img': request.json['img'],
-         'views': request.json['views'],
-         'visualizacao': request.json['visualizacao']}})
+        }})
      return jsonify({'message': 'Anuncio atualizado'})
+
+@app.route('/atualizar/view/<id>', methods=["POST"])
+def updateViewAnuncio(id):
+
+     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {'views': request.json['views'] + 1}})
+     view = mongo.db.anuncios.find_one({'id': int(id)})
+     print(view)
+     return jsonify({'views': view['views']})
+
+
+@app.route('/atualizar/visu/<id>', methods=["POST"])
+def updateVisuAnuncio(id):
+
+     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {'visualizacao': request.json['visualizacao']}})
+     visualizacao = mongo.db.anuncios.find_one({'id': int(id)})
+     print(visualizacao)
+     return jsonify({'visualizacao': visualizacao['visualizacao']})
  
 if __name__ == "__main__":
     app.run()

@@ -2,8 +2,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../../screens/Home';
+import HomeAdm from '../../screens/Home/indexAdm';
 import Profile from '../../screens/Profile';
-import Search from '../../screens/Search';
+import SearchAdm from '../../screens/SeacrchAdm';
 import Ads from '../../screens/Ads';
 import Chat from '../../screens/Chat';
 import ChatRoom from '../../screens/Chat/ChatRoom';
@@ -26,7 +27,9 @@ const icons = {
     Profile: {
         name: 'person'
     },
-  
+    ChatRoom: {
+        name: 'chatbubbles'
+    },
 }
 
 const BottomTab = () => {
@@ -50,17 +53,17 @@ const BottomTab = () => {
                     const { name } = icons[route.name];
                     return <Ionicons name={name} size={size}  color={color} />;
                 },
-                activeTintColor: secondary,
+                activeTintColor: '#3F37C9',
             })}
             
         >
             <Tab.Screen
                 name='Home'
-                component={Home}
+                component={HomeAdm}
             />
             <Tab.Screen
                 name='Search'
-                component={Search}
+                component={SearchAdm}
             />
             <Tab.Screen
                 name='Ads'

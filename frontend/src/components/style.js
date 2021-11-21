@@ -18,9 +18,9 @@ background-color: ${colors.primary};
 padding-bottom: 0px;   
 `;
 export const BasicContainer = styled.View`
-flex: 1;
-padding: 30px;
-background-color: ${colors.primary};
+
+padding: 25px;
+
 padding-bottom: 0px;   
 `;
 
@@ -39,6 +39,14 @@ export const ItemsView = styled.View`
 export const Item = styled.TouchableOpacity`
     width: auto;
     height: 250px;
+    padding: 8px;
+`;
+
+
+export const ItemUser = styled.TouchableOpacity`
+    width: auto;
+    height: 200px;
+    padding: 8px;
 `;
 
 export const ItemImage = styled.Image`
@@ -52,6 +60,7 @@ export const ItemTitle = styled.Text`
     font-weight: bold;
     font-size: 17px;
     padding-top: 5px;
+  
 `;
 
 export const ItemText = styled.Text`
@@ -147,6 +156,7 @@ border-radius: 5px;
     background: #DEE2E6;
     margin-left: 15px;
     width:  100px;
+    padding: 4px;
   
 `;
 

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
-  View,
-  SafeAreaView,
-  Text,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   Dimensions,
+  Text,
+  ImageBackground,
 } from "react-native";
-
 import {
   BasicContainer,
   Item,
@@ -22,37 +19,17 @@ import {
 } from "../../components/style";
 import { Button, SubTitle } from "../../components/styles";
 import SearchInput from "../../components/Input/searchInput";
-import { FlatList } from "react-native";
-//import anuncios from "../../data/anuncios";
+import { FlatList, View } from "react-native";
+//import user from "../../data/";
 import Header from "../../components/header";
-
-const listTab = [
-  {
-    status: "All",
-  },
-  {
-    status: "Preto",
-  },
-  {
-    status: "Verde",
-  },
-];
-
-const marcaList = [
-  {
-    status: "All",
-  },
-  {
-    status: "Volkswagen",
-  },
-  {
-    status: "Chevrolet",
-  },
-];
 
 const Home = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState();
+  const [todos, setTodos] = useState();
+
+
+
 
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
@@ -62,14 +39,19 @@ const Home = ({ navigation }) => {
   // Filtro campo de pesquisa
   useEffect(() => {
     if (searchText === "") {
-      getAnuncios();
-     setList(list);
+      //getAnuncios();
+      setList(todos);
     } else {
       setList(
-        list.filter(
-          (item) =>
+        todos.filter((item) => {
+          console.log(
+            item,
             item.fabricante.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-        )
+          );
+          return (
+            item.fabricante.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+          );
+        })
       );
     }
   }, [searchText]);
@@ -78,26 +60,31 @@ const Home = ({ navigation }) => {
     const res = await fetch(`http://127.0.0.1:5000/listar/anuncios`);
     const anuncios = await res.json();
     setList(anuncios);
+    setTodos(anuncios);
   };
 
   useEffect(() => {
-
+    getAnuncios();
   }, []);
 
+
   return (
-    <HeadContainer>
-      <Header />
+    <ImageBackground
+      source={require("../images/back.png")}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <StatusBar style="dark" />
       <BasicContainer>
-        <StatusBar style="dark" />
-        <ScrollView>
-          <SearchInput
-            value={searchText}
-            onChangeText={(t) => setSearchText(t)}
-            placeholder="Pesquisar"
-          />
+        <SearchInput
+          value={searchText}
+          onChangeText={(t) => setSearchText(t)}
+          placeholder="Pesquisar"
+        />
+        <SubTitle>Resultados...</SubTitle>
+      </BasicContainer>
 
-          <SubTitle>Resultados...</SubTitle>
-
+      <ScrollView>
+        <BasicContainer>
           <FlatList
             data={list}
             renderItem={({ item }) => (
@@ -106,63 +93,49 @@ const Home = ({ navigation }) => {
                   <ItemTitle>{item.fabricante}</ItemTitle>
                 </ContainerInfo>
                 <ItemImage source={item.img} />
+
                 <ContainerAnuncio>
-                  <ItemText>{item.desc_veiculo}</ItemText>
+                  <View
+                    style={{
+                      flexDirection: "row",
+
+                      alignItems: "center",
+                      paddingHorizontal: 5,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#36343A",
+                      }}
+                    >
+                      {" "}
+                      Ano do Modelo:{" "}
+                    </Text>
+
+                    <View style={{ padding: 2, marginRight: 15 }}>
+                      {item.ano_modelo}
+                    </View>
+
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#36343A",
+                      }}
+                    >
+                      {" "}
+                      Valor:{" "}
+                    </Text>
+                    <View style={{ padding: 2 }}>{item.valor_veiculo}$</View>
+                  </View>
                 </ContainerAnuncio>
               </Item>
             )}
           />
-        </ScrollView>
-      </BasicContainer>
-    </HeadContainer>
+        </BasicContainer>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
-  listTab: {
-    flexDirection: "row",
-    marginTop: "20px",
-    marginBottom: 20,
-  },
-  btnTab: {
-    width: Dimensions.get("window").width / 3.8,
-    flexDirection: "row",
-    borderWidth: 0.5,
-    borderColor: "#EBEBEB",
-    padding: 10,
-    justifyContent: "center",
-  },
-  btnTab2: {
-    width: Dimensions.get("window").width / 3.8,
-    flexDirection: "row",
-    borderWidth: 0.5,
-    borderColor: "#EBEBEB",
-    padding: 10,
-    justifyContent: "center",
-  },
-  textTab: {
-    fontSize: 16,
-  },
-  textTab2: {
-    fontSize: 16,
-  },
-  btnTabActive: {
-    backgroundColor: "#3F37C9",
-  },
-  textTabActive: {
-    color: "#fff",
-  },
-  btnTabActive2: {
-    backgroundColor: "#3F37C9",
-  },
-  textTabActive2: {
-    color: "#fff",
-  },
-});

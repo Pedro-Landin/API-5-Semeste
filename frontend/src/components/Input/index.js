@@ -7,7 +7,7 @@ const {primary, secondary} = Colors;
 
 const TextInput = ({ 
     label, 
-    icon, isPassword, hidePassword, setHidePassword, ...props }) => {
+    icon, isPassword, hidePassword, onChangeEmail, setHidePassword, ...props }) => {
     return (
         <View>
             <InputLabel>{label}</InputLabel>

@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import { api } from "../../services/api";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Container,
   InnerContainer,
@@ -11,66 +10,43 @@ import {
   ExtraView,
   TextLink,
   TextLinkContent,
-  MsgBox,
 } from "../../components/styles";
-import { ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
-
-import { Formik } from "formik";
 import TextInput from "../../components/Input";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CredentialsContext } from "../../context/credentials";
 import Header from "../../components/header/headerLogin";
 import { HeadContainer } from "../../components/style";
+import { useAuth } from "../../context/auth";
+
 
 const Login = ({ navigation }) => {
-  const [hidePassword, setHidePassword] = useState(true);
-  const [message, setMessage] = useState();
-  const [messageType, setMessageType] = useState();
+  const { user, setUser } = useAuth();
 
-  const { storedCredentials, setStoredCredentials } =
-    useContext(CredentialsContext);
 
-  const handleLogin = (credentials, setSubmitting) => {
-    handleMessage(null);
-    api
-      .post(`/bycar/login`, credentials)
-      .then((response) => {
-        const { message, status, data } = response;
-        if (data.login === "FAILED") {
-          handleMessage("Credenciais Inválidas");
-        } else {
-          persistLogin(data, message, status); //Navigation aqui 
-        }
-        setSubmitting(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        handleMessage(
-          "Ocorreu um erro. Verifique sua internet e tente novamente"
-        );
-        setSubmitting(false);
-      });
+  const [email, setEmail] = useState();
+  const [senha, setSenha] = useState();
+
+  const SignIn = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        senha: senha,
+      }),
+    });
+    const usuario = await res.json();
+    console.log(usuario[0])
+    usuario[0].estaLogado = true
+  
+    setUser(usuario[0]);
+    AsyncStorage.setItem("user", JSON.stringify(usuario[0]))
+    
   };
 
-  const handleMessage = (message, type = "FAILED") => {
-    setMessage(message);
-    setMessageType(type);
-  };
-
-  const persistLogin = (credentials, message, status) => {
-    AsyncStorage.setItem("bycarCredentials", JSON.stringify(credentials))
-      .then(() => {
-        handleMessage(message, status);
-        setStoredCredentials(credentials);
-      })
-      .catch((error) => {
-        console.log(error);
-        handleMessage("O login falhou");
-      });
-  };
-
+  
   return (
     <HeadContainer>
       <Header />
@@ -79,67 +55,33 @@ const Login = ({ navigation }) => {
         <StatusBar style="dark" />
         <InnerContainer>
           <SubTitlelogin>Login</SubTitlelogin>
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={(values, { setSubmitting }) => {
-              if (values.email === "" || values.password === "") {
-                handleMessage("Por favor preencha todos os campos");
-                setSubmitting(false);
-              } else {
-                handleLogin(values, setSubmitting);
-              }
-            }}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              isSubmitting,
-            }) => (
-              <FormArea>
-                <TextInput
-                  label="E-mail"
-                  placeholder="Insira seu e-mail"
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                  keyboardType="email-address"
-                />
-                <TextInput
-                  label="Senha"
-                  placeholder="Insira sua senha"
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
-                  secureTextEntry={hidePassword}
-                  isPassword={true}
-                  hidePassword={hidePassword}
-                  setHidePassword={setHidePassword}
-                />
-                <MsgBox type={messageType}>{message}</MsgBox>
-                {!isSubmitting && (
-                  <Button onPress={handleSubmit}>
-                    <ButtonText>ENTRAR</ButtonText>
-                  </Button>
-                )}
-                {isSubmitting && (
-                  <Button disabled={true}>
-                    <ActivityIndicator size="large" color="#fff" />
-                  </Button>
-                )}
-                <ExtraView>
-                  <TextLink>
-                    <TextLinkContent
-                      onPress={() => navigation.navigate("EmailValidation")}
-                    >
-                      Esqueceu a senha?
-                    </TextLinkContent>
-                  </TextLink>
-                </ExtraView>
-              </FormArea>
-            )}
-          </Formik>
+
+          <FormArea>
+            <TextInput
+              label="E-mail"
+              placeholder="Insira seu e-mail"
+              onChangeText={(value) => setEmail(value)}
+            />
+            <TextInput
+              label="Senha"
+              placeholder="Insira sua senha"
+              onChangeText={(value) => setSenha(value)}
+            />
+
+            <Button onPress={SignIn}>
+              <ButtonText>ENTRAR</ButtonText>
+            </Button>
+
+            <ExtraView>
+              <TextLink>
+                <TextLinkContent
+                  onPress={() => navigation.navigate("EmailValidation")}
+                >
+                  Esqueceu a senha?
+                </TextLinkContent>
+              </TextLink>
+            </ExtraView>
+          </FormArea>
         </InnerContainer>
       </Container>
     </HeadContainer>

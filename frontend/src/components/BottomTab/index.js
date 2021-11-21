@@ -52,7 +52,7 @@ const BottomTab = () => {
                     const { name } = icons[route.name];
                     return <Ionicons name={name} size={size}  color={color} />;
                 },
-                activeTintColor: '#3F37C9',
+                activeTintColor: '#3F37C5',
             })}
             
         >
