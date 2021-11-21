@@ -212,7 +212,8 @@ def redefine_senha():
     if (len(resp)) > 2:
         senha = ''.join(random.choice(string.digits) for x in range(cod))
         mongo.db.usuarios.find_one_and_update({'email' : _email}, {"$set":{'senha': senha}})
-        Cadastro.sender_email_1(email, senha)
+        #Cadastro.sender_email_1(email, senha)
+        Cadastro.sender_email_1( senha)
         return resp
     else:
         return not_found
@@ -337,6 +338,11 @@ def updateVisuAnuncio(id):
      visualizacao = mongo.db.anuncios.find_one({'id': int(id)})
      print(visualizacao)
      return jsonify({'visualizacao': visualizacao['visualizacao']})
+@app.route('/atualizar/view/<id>', methods=["PUT"])
+def updateViewAnuncio(id):
+     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {'views': request.json['views']}})
+     view = mongo.db.anuncios.find_one({'id': int(id)})
+     return jsonify({'views': view['views']})
  
 if __name__ == "__main__":
     app.run()
