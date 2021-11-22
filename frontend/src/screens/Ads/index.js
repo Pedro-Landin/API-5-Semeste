@@ -77,12 +77,43 @@ const Ads = ({ navigation, route }) => {
     setList(anuncios);
   };
 
-  async function pegarValor(){
-     const myuser = await AsyncStorage.getItem('user')
 
-  }
+  
+  const VisuPausar = async (Id) => {
+    const res = await fetch(`http://127.0.0.1:5000/atualizar/visu/${Id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        visualizacao: 0
+      }),
+    });
+    const pausar = await res.json();
+    console.log(pausar);
+  };
 
-  pegarValor();
+  
+  
+  const VisuDesPausar = async (Id) => {
+    const res = await fetch(`http://127.0.0.1:5000/atualizar/visu/${Id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        visualizacao: 1
+      }),
+    });
+    const pausar = await res.json();
+    console.log(pausar);
+  };
+ // async function pegarValor(){
+ //    const myuser = await AsyncStorage.getItem('user')
+
+ // }
+
+ // pegarValor();
 
   return (
     <ImageBackground
@@ -161,14 +192,29 @@ const Ads = ({ navigation, route }) => {
                     <View>{item.views}</View>
 
                     <TouchableOpacity>
+                      {item.visualizacao === 0 ?
+
+                    (
                       <Icon
-                        onPress={() => setPausar(true)}
-                        name="block-helper"
+                        onPress={() => VisuDesPausar(item.id)}
+                        name="play-pause"
                         size={25}
                         color="#36343A"
                         style={{ marginLeft: 15, padding: 2 }}
                       />
-                    </TouchableOpacity>
+                    ) : 
+                    (
+
+                      <Icon
+                      onPress={() => VisuPausar(item.id)}
+                      name="pause"
+                      size={25}
+                      color="#36343A"
+                      style={{ marginLeft: 15, padding: 2 }}
+                    />
+                    )}
+                      </TouchableOpacity>
+
                   </View>
                 </ContainerAnuncio>
               </Item>

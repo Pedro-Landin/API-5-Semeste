@@ -30,6 +30,7 @@ const DetailsAds = ({ navigation, route }) => {
   const [valor_veiculo, setPreco] = useState(anuncios.valor_veiculo);
   const [cod_anunciante, setCod] = useState(anuncios.cod_anunciante);
 
+const [pausado, setDespausado] = useState(visualizacao)
 
   const Edinting = async (Id) => {
     const res = await fetch(`http://127.0.0.1:5000/atualizar/anuncio/${Id}`, {
@@ -92,31 +93,30 @@ const DetailsAds = ({ navigation, route }) => {
               borderRadius: 15,
             }}
           >
+    
+            { pausado === 0 ?
+             (
+             <View
+             style={{
+               paddingTop: 20,
 
-            {visualizacao.visualizacao ?  
+               alignItems: "flex-start",
+             }}
+           >
+             <Text
+               style={{
+                 fontFamily: "RobotoBold",
+                 color: "#4b3ca7",
+                 fontSize: 20,
+               }}
+             >
+               Pausado
+             </Text>
+           </View>
             
-            
-
-            <View
-              style={{
-                paddingTop: 20,
-
-                alignItems: "flex-start",
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "RobotoBold",
-                  color: "#4b3ca7",
-                  fontSize: 20,
-                }}
-              >
-                Pausado
-              </Text>
-            </View>
-
-            :
-
+            ) :
+            (
+        
             <View
               style={{
                 paddingTop: 20,
@@ -134,10 +134,8 @@ const DetailsAds = ({ navigation, route }) => {
                 Despausado
               </Text>
             </View>
-
-            }
-          
-
+            )}
+        
             <View
               style={{
                 paddingTop: 20,
