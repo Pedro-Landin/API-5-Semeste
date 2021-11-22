@@ -268,22 +268,26 @@ def lista_anuncio():
 #lista anuncio por cpf do usuario
 @app.route('/listar/anuncio/<cpf_anunciante>', methods = ["GET"])
 def anuncio(cpf_anunciante):
-    anuncios = mongo.db.anuncios.find_one({'cpf_anunciante': int(cpf_anunciante)})
-    return jsonify({ 
-      '_id': str(ObjectId(anuncios['_id'])),
-      'fabricante' : anuncios['fabricante'],
-      'desc_marca': anuncios['desc_marca'], 
-      'desc_veiculo': anuncios['desc_veiculo'],
-      'cod_anunciante': anuncios['cod_anunciante'],
-      'ano_fabricacao': anuncios['ano_fabricacao'],
-      'ano_modelo': anuncios[ 'ano_modelo'],
-      'cpf_anunciante': anuncios['cpf_anunciante'],
-      'valor_veiculo': anuncios['valor_veiculo'],
-      'id': anuncios['id'],
-      'img': anuncios['img'],
-      'visualizacao': anuncios['visualizacao'],
-      'views': anuncios['views']
-  })
+    anuncios = []
+    for doc in mongo.db.anuncios.find({'cpf_anunciante': int(cpf_anunciante)}):
+        anuncios.append({    
+           '_id': str(ObjectId(doc['_id'])),
+           'fabricante' : doc['fabricante'],
+           'desc_marca':doc['desc_marca'], 
+           'desc_veiculo': doc['desc_veiculo'],
+           'cod_anunciante': doc['cod_anunciante'],
+           'ano_fabricacao': doc['ano_fabricacao'],
+           'ano_modelo': doc[ 'ano_modelo'],
+           'cpf_anunciante': doc['cpf_anunciante'],
+           'valor_veiculo': doc['valor_veiculo'],
+           'id': doc['id'],
+           'img': doc['img'],
+           'visualizacao': doc['visualizacao'],
+           'views': doc['views']
+        })
+    return jsonify(anuncios)
+
+  
   
 #Lista anuncio especifico
 @app.route('/anuncio/<id>', methods=['GET'])
@@ -338,11 +342,7 @@ def updateVisuAnuncio(id):
      visualizacao = mongo.db.anuncios.find_one({'id': int(id)})
      print(visualizacao)
      return jsonify({'visualizacao': visualizacao['visualizacao']})
-@app.route('/atualizar/view/<id>', methods=["PUT"])
-def updateViewAnuncio(id):
-     mongo.db.anuncios.update_one({'id': int(id)}, {"$set": {'views': request.json['views']}})
-     view = mongo.db.anuncios.find_one({'id': int(id)})
-     return jsonify({'views': view['views']})
+     
  
 if __name__ == "__main__":
     app.run()

@@ -74,7 +74,7 @@ const Ads = ({ navigation, route }) => {
       `http://127.0.0.1:5000/listar/anuncio/${cpf_anunciante}`
     );
     const anuncios = await res.json();
-    setList([anuncios]);
+    setList(anuncios);
   };
 
   async function pegarValor(){
