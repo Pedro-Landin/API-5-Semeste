@@ -23,7 +23,7 @@ import { FlatList, View } from "react-native";
 //import user from "../../data/";
 import Header from "../../components/header";
 
-const Anuncios = ({ navigation }) => {
+const AnunciosAdm = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState();
   const [todos, setTodos] = useState();
@@ -138,4 +138,4 @@ const Anuncios = ({ navigation }) => {
   );
 };
 
-export default Anuncios;
+export default AnunciosAdm;

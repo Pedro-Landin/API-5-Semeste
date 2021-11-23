@@ -108,6 +108,19 @@ const Ads = ({ navigation, route }) => {
     const pausar = await res.json();
     console.log(pausar);
   };
+
+
+  const CreateAnuncio = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/create/anuncio`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+     
+    });
+    const pausar = await res.json();
+    console.log(pausar);
+  };
  // async function pegarValor(){
  //    const myuser = await AsyncStorage.getItem('user')
 
@@ -138,6 +151,17 @@ const Ads = ({ navigation, route }) => {
           <input type="file" id="anuncio" name="anuncio" />
           <input type="submit" defaultValue="Submit" />
         </form>
+
+        
+     {/**   <form //Rota do banco python
+      onsubmit="CreateAnuncio()"
+        
+        >
+          <input type="file" id="anuncio" name="anuncio" />
+          <input type="submit"  />
+        </form>
+
+     */ }
       </BasicContainer>
 
       <ScrollView>
