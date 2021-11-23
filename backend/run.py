@@ -265,6 +265,29 @@ def lista_anuncio():
             })
     return jsonify(anuncios)
 
+
+#lista todos os anuncios
+@app.route('/listar/anunciosADM', methods = ["GET"])
+def lista_anuncioADM():
+    anuncios = []
+    for doc in mongo.db.anuncios.find():
+            anuncios.append({
+                '_id': str(ObjectId(doc['_id'])),
+                'fabricante': doc['fabricante'],
+                'desc_marca': doc['desc_marca'],
+                'desc_veiculo': doc['desc_veiculo'],
+                'cod_anunciante': doc['cod_anunciante'],
+                'ano_fabricacao': doc['ano_fabricacao'],
+                'ano_modelo': doc['ano_modelo'],
+                'cpf_anunciante': doc['cpf_anunciante'],
+                'valor_veiculo': doc['valor_veiculo'],
+                'id': doc['id'],
+                'img': doc['img'],
+                'visualizacao': doc['visualizacao'],
+                'views': doc['views']
+            })
+    return jsonify(anuncios)
+
 #lista anuncio por cpf do usuario
 @app.route('/listar/anuncio/<cpf_anunciante>', methods = ["GET"])
 def anuncio(cpf_anunciante):

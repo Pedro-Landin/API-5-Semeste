@@ -33,7 +33,7 @@ const Anuncios = ({ navigation }) => {
 
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
-    navigation.navigate("Details", { ...item });
+    navigation.navigate("Detalhes", { ...item });
   };
 
   // Filtro campo de pesquisa
@@ -57,7 +57,7 @@ const Anuncios = ({ navigation }) => {
   }, [searchText]);
 
   const getAnuncios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/anuncios`);
+    const res = await fetch(`http://127.0.0.1:5000/listar/anunciosADM`);
     const anuncios = await res.json();
     setList(anuncios);
     setTodos(anuncios);
@@ -94,41 +94,6 @@ const Anuncios = ({ navigation }) => {
                 </ContainerInfo>
                 <ItemImage source={item.img} />
 
-                <ContainerAnuncio>
-                  <View
-                    style={{
-                      flexDirection: "row",
-
-                      alignItems: "center",
-                      paddingHorizontal: 5,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "#36343A",
-                      }}
-                    >
-                      {" "}
-                      Ano do Modelo:{" "}
-                    </Text>
-
-                    <View style={{ padding: 2, marginRight: 15 }}>
-                      {item.ano_modelo}
-                    </View>
-
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "#36343A",
-                      }}
-                    >
-                      {" "}
-                      Valor:{" "}
-                    </Text>
-                    <View style={{ padding: 2 }}>{item.valor_veiculo}$</View>
-                  </View>
-                </ContainerAnuncio>
               </Item>
             )}
           />

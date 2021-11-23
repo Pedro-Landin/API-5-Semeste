@@ -9,29 +9,12 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import {
-  DetailsHead,
-  DetailsHeadView,
-  DetailsPrice,
-  DetailsProperties,
-  Pad,
-  DetailsView,
-  DetailsValue,
-  Description,
-  Container,
-  ItemText,
-  Informations,
-} from "../../components/style";
-import { Button, ButtonText } from "../../components/styles";
-import { StatusBar } from "expo-status-bar";
-import { db } from "../../services/firebase";
 
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
 
-const Details = ({ navigation, route }) => {
+const DetailsADM = ({ navigation, route }) => {
   const {
     img,
     fabricante,
@@ -212,37 +195,17 @@ const Details = ({ navigation, route }) => {
             >
               {desc_veiculo}
             </Text>
-          </View>
-          <Button
-            onPress={() =>
-              db
-                .collection("MESSAGE_THREADS")
-                .add({
-                  name: `${name}, de ${by}`,
-                  latestMessage: {
-                    text: `olá ${name}`,
-                    createdAt: new Date().getTime(),
-                  },
-                })
-                .then((docRef) => {
-                  docRef.collection("MESSAGES").add({
-                    text: `Hello`,
-                    createdAt: new Date().getTime(),
-                    system: true,
-                  });
-                  navigation.navigate("ChatRoom");
-                })
-            }
-          >
-            <ButtonText>CHAT</ButtonText>
-          </Button>
+          </View> 
+          
+       
+          
         </View>
       </ScrollView>
     </ImageBackground>
   );
 };
 
-export default Details;
+export default DetailsADM;
 
 export const pannel = StyleSheet.create({
   image: {

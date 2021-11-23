@@ -8,6 +8,8 @@ import DetailsAds from "../screens/Search/DetailsAds";
 import Details from "../screens/Search/Details";
 import { useAuth } from "../context/auth";
 import PasswordRecovery from "../screens/ChangePassword";
+import Detalhes from "../screens/SeacrchAdm/Detalhes";
+import DetalhesUsu from "../screens/SeacrchAdm/DetalhesUsu";
 
 const AppStack = createStackNavigator();
 
@@ -33,10 +35,15 @@ const AppRoutes = () => {
       {user.status ?    
          
       <>
-      {user.cod ? <AppStack.Screen name="BottomTabAdm" component={BottomTabAdm} />
-       
-
-
+      {user.cod ? 
+      <>
+      <AppStack.Screen name="BottomTabAdm" component={BottomTabAdm} />
+    
+      <AppStack.Screen name="Detalhes" component={Detalhes} />
+      <AppStack.Screen name="DetalhesUsu" component={DetalhesUsu} />
+ 
+ 
+      </>
       : 
       <AppStack.Screen name="BottomTab" component={BottomTab} />
 
