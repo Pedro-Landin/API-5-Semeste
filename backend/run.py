@@ -124,6 +124,14 @@ def users():
         
     return jsonify(users)
 
+
+#Quantos usuarios tem no total 
+@app.route('/quantos/usuarios', methods = ["GET"])
+def quantosUsers():
+    
+    users = mongo.db.usuarios.find().count()
+    return jsonify(users)
+
 #lista usuario por id
 @app.route('/listar/usuario/<id>', methods = ["GET"])
 def user(id):
@@ -288,6 +296,30 @@ def lista_anuncioADM():
             })
     return jsonify(anuncios)
 
+
+
+#lista 5 anuncios para pagina home do ADM 
+@app.route('/listar10/anunciosADM', methods = ["GET"])
+def lista10anuncioADM():
+    anuncios = []
+    for doc in mongo.db.anuncios.find().limit(2):
+            anuncios.append({
+                '_id': str(ObjectId(doc['_id'])),
+                'fabricante': doc['fabricante'],
+                'desc_marca': doc['desc_marca'],
+                'desc_veiculo': doc['desc_veiculo'],
+                'cod_anunciante': doc['cod_anunciante'],
+                'ano_fabricacao': doc['ano_fabricacao'],
+                'ano_modelo': doc['ano_modelo'],
+                'cpf_anunciante': doc['cpf_anunciante'],
+                'valor_veiculo': doc['valor_veiculo'],
+                'id': doc['id'],
+                'img': doc['img'],
+                'visualizacao': doc['visualizacao'],
+                'views': doc['views']
+            })
+    return jsonify(anuncios)
+
 #lista anuncio por cpf do usuario
 @app.route('/listar/anuncio/<cpf_anunciante>', methods = ["GET"])
 def anuncio(cpf_anunciante):
@@ -309,6 +341,47 @@ def anuncio(cpf_anunciante):
            'views': doc['views']
         })
     return jsonify(anuncios)
+
+
+#Contar quantos anuncios o anunciante tem
+@app.route('/quantos/anuncio/<cpf_anunciante>', methods = ["GET"])
+def quantos(cpf_anunciante):
+
+    anuncios = mongo.db.anuncios.find({'cpf_anunciante': int(cpf_anunciante)}).count()
+    return jsonify(anuncios)
+
+
+#Contar quantos anuncios no total o sistema tem 
+@app.route('/quantos/anuncios', methods = ["GET"])
+def quantosGeral():
+
+    anuncios = mongo.db.anuncios.find().count()
+    return jsonify(anuncios)
+
+    
+#lista quantos anuncios pausados temos
+@app.route('/pausados/anuncios', methods = ["GET"])
+def anunciosPausados():
+ 
+    anuncios = mongo.db.anuncios.find({"visualizacao": 1}).count()   
+    return jsonify(anuncios)
+
+
+#lista quantos anuncios despausados temos
+@app.route('/ativos/anuncios', methods = ["GET"])
+def ativosPausados():
+ 
+    anuncios = mongo.db.anuncios.find({"visualizacao": 0}).count()   
+    return jsonify(anuncios)
+
+
+#lista quantos anuncios despausados temos
+@app.route('/quantas/views', methods = ["GET"])
+def quantasViews():
+ 
+    anuncios = mongo.db.anuncios.find({"views"}).count()   
+    return jsonify(anuncios)
+
 
   
   
