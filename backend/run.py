@@ -303,6 +303,7 @@ def lista_anuncioADM():
 def lista5anuncio():
     anuncios = []
     for doc in mongo.db.anuncios.find().limit(5):
+        if doc['visualizacao'] == 1:
             anuncios.append({
                 '_id': str(ObjectId(doc['_id'])),
                 'fabricante': doc['fabricante'],

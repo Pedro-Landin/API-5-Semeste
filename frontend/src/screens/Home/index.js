@@ -34,6 +34,7 @@ import { useAuth } from "../../context/auth";
 //const { width} = Dimensions.get('window');
 const Home = ({navigation}) => {
   const [list, setList] = useState();
+  const [ativos, setAtivos] = useState();
   const { user, setUser } = useAuth();
 
   const { email, nome } = user;
@@ -43,15 +44,24 @@ const Home = ({navigation}) => {
     navigation.navigate("Details", { ...item });
   };
 
+  
 
-  const getAnuncios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/anuncios`);
+  const getanunciosAtivos = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/ativos/anuncios`);
+    const anuncios = await res.json();
+    setAtivos(anuncios);
+  };
+
+
+  const getAnuncios= async () => {
+    const res = await fetch(`http://127.0.0.1:5000/listar5/anuncios`);
     const anuncios = await res.json();
     setList(anuncios);
   };
 
   useEffect(() => {
     getAnuncios();
+    getanunciosAtivos();
   }, []);
 
   return (
@@ -95,7 +105,7 @@ const Home = ({navigation}) => {
               backgroundColor: "#5facdb",
             }}
           >
-            12
+            {ativos}
           </TouchableOpacity>
 
           <Text
