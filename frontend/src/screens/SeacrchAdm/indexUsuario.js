@@ -68,6 +68,14 @@ const Usuarios = ({ navigation }) => {
           placeholder="Pesquisar"
         />
         <SubTitle>Resultados...</SubTitle>
+        <form //Rota do banco python
+            action="http://127.0.0.1:5000/create/user"
+            method="POST"
+            encType="multipart/form-data"
+          >
+            <input type="file" id="arq" name="arq" />
+            <input type="submit" value="Submit" />
+          </form>
       </BasicContainer>
 
       <ScrollView>
@@ -78,7 +86,7 @@ const Usuarios = ({ navigation }) => {
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
-                  backgroundColor: "rgba(255,255,255,0.8)",
+                  backgroundColor: "#DEE2E6",
                   marginBottom: 20,
                   borderRadius: 12,
                   shadowColor: "#000",

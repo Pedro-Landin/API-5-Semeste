@@ -10,6 +10,9 @@ import { useAuth } from "../context/auth";
 import PasswordRecovery from "../screens/ChangePassword";
 import Detalhes from "../screens/SeacrchAdm/Detalhes";
 import DetalhesUsu from "../screens/SeacrchAdm/DetalhesUsu";
+import Anuncios from "../screens/SeacrchAdm/index"
+import Relatorio from "../screens/relatorio/index"
+import Usuarios from "../screens/SeacrchAdm/indexUsuario"
 
 const AppStack = createStackNavigator();
 
@@ -41,8 +44,9 @@ const AppRoutes = () => {
     
       <AppStack.Screen name="Detalhes" component={Detalhes} />
       <AppStack.Screen name="DetalhesUsu" component={DetalhesUsu} />
- 
- 
+      <AppStack.Screen name="anuncios" component={Anuncios } />
+      <AppStack.Screen name="relatorio" component={Relatorio} />
+      <AppStack.Screen name="usuarios" component={Usuarios}/>
       </>
       : 
       <AppStack.Screen name="BottomTab" component={BottomTab} />
