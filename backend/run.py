@@ -298,11 +298,11 @@ def lista_anuncioADM():
 
 
 
-#lista 5 anuncios para pagina home do ADM 
-@app.route('/listar10/anunciosADM', methods = ["GET"])
-def lista10anuncioADM():
+#lista 5 anuncios para recomendados da pagina home. 
+@app.route('/listar10/anuncios', methods = ["GET"])
+def lista10anuncio():
     anuncios = []
-    for doc in mongo.db.anuncios.find().limit(2):
+    for doc in mongo.db.anuncios.find().limit(5):
             anuncios.append({
                 '_id': str(ObjectId(doc['_id'])),
                 'fabricante': doc['fabricante'],
