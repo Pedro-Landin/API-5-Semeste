@@ -359,17 +359,17 @@ def quantosGeral():
     return jsonify(anuncios)
 
     
-#lista quantos anuncios pausados temos
+#lista quantos anuncios ativos temos
 @app.route('/pausados/anuncios', methods = ["GET"])
-def anunciosPausados():
+def anunciosAtivos():
  
     anuncios = mongo.db.anuncios.find({"visualizacao": 1}).count()   
     return jsonify(anuncios)
 
 
-#lista quantos anuncios despausados temos
+#lista quantos anuncios pausados temos
 @app.route('/ativos/anuncios', methods = ["GET"])
-def ativosPausados():
+def aanunciosPausados():
  
     anuncios = mongo.db.anuncios.find({"visualizacao": 0}).count()   
     return jsonify(anuncios)
