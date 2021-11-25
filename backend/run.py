@@ -360,7 +360,7 @@ def quantosGeral():
 
     
 #lista quantos anuncios ativos temos
-@app.route('/pausados/anuncios', methods = ["GET"])
+@app.route('/ativos/anuncios', methods = ["GET"])
 def anunciosAtivos():
  
     anuncios = mongo.db.anuncios.find({"visualizacao": 1}).count()   
@@ -368,7 +368,7 @@ def anunciosAtivos():
 
 
 #lista quantos anuncios pausados temos
-@app.route('/ativos/anuncios', methods = ["GET"])
+@app.route('/pausados/anuncios', methods = ["GET"])
 def aanunciosPausados():
  
     anuncios = mongo.db.anuncios.find({"visualizacao": 0}).count()   
