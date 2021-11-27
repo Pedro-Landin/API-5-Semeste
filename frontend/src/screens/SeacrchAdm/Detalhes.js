@@ -21,32 +21,15 @@ const DetailsADM = ({ navigation, route }) => {
     desc_veiculo,
     valor_veiculo,
     views,
+    email,
     id,
+    visualizacao,
     ano_modelo,
     ano_fabricacao,
     desc_marca,
   } = route.params;
   
-  const [view, setView] = useState(views);
 
-  
-  const Edit = async (Id) => {
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/view/${Id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        views: view
-      }),
-    });
-    const v = await res.json();
-    console.log(v);
-  };
-
-  setTimeout(function () {
-    Edit(id);
-  }, 2000);
 
   return (
     <ImageBackground
@@ -76,6 +59,8 @@ const DetailsADM = ({ navigation, route }) => {
           paddingTop: 20,
         }}
       >
+
+        
         <View
           style={{
             paddingHorizontal: 32,
@@ -88,6 +73,49 @@ const DetailsADM = ({ navigation, route }) => {
             borderRadius: 15,
           }}
         >
+
+          
+{ visualizacao === 0 ?
+             (
+             <View
+             style={{
+               paddingTop: 20,
+
+               alignItems: "flex-start",
+             }}
+           >
+             <Text
+               style={{
+                 fontFamily: "RobotoBold",
+                 color: "#4b3ca7",
+                 fontSize: 20,
+               }}
+             >
+               Pausado
+             </Text>
+           </View>
+            
+            ) :
+            (
+        
+            <View
+              style={{
+                paddingTop: 20,
+
+                alignItems: "flex-start",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "RobotoBold",
+                  color: "#4b3ca7",
+                  fontSize: 20,
+                }}
+              >
+                Despausado
+              </Text>
+            </View>
+            )}
           <View
             style={{
               flexDirection: "row",
@@ -165,6 +193,17 @@ const DetailsADM = ({ navigation, route }) => {
             }}
           >
             {desc_marca}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "RobotoRegular",
+              color: "#522289",
+              fontSize: 17,
+              padding: 5,
+            }}
+          >
+            E-mail de contato: 
+            {email}
           </Text>
 
           <Text

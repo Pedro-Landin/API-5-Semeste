@@ -9,16 +9,76 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
+import {
+ 
+  ItemImage,
+  ItemTitle,
+  Item,
+  ItemText,
+} from "../../components/style";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../../context/auth";
 import { BasicContainer } from "../../components/style";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //const { width} = Dimensions.get('window');
 const Home = ({ navigation }) => {
+  const [list, setList] = useState();
+  const [users, setUsers] = useState();
+
   const { user, setUser } = useAuth();
 
   const { email, nome } = user;
+
+  const showDetailsUsu = (item) => {
+    navigation.navigate("DetalhesUsu", { ...item });
+  };
+
+  const showDetailsAnu = (item) => {
+    navigation.navigate("Detalhes", { ...item });
+  };
+
+  
+
+  async function logout() {
+    await AsyncStorage.removeItem("user");
+    setUser({
+      estaLogado: false,
+      atividade: "",
+      cod: "",
+      cpf: "",
+      email: "",
+      endereco: "",
+      nome: "",
+      senha: "",
+      status: "",
+      telefone: "",
+    });
+  //  console.log("tets")
+  }
+
+
+  const getAnuncios = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/listar/anunciosADM`);
+    const anuncios = await res.json();
+    setList(anuncios);
+
+  };
+
+  
+  const getUsuarios = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/listar/usuarios`);
+    const usuarios = await res.json();
+    setUsers(usuarios);
+    
+  };
+
+  
+  useEffect(() => {
+    getAnuncios();
+    getUsuarios();
+  }, []);
 
   return (
     <ImageBackground
@@ -28,7 +88,7 @@ const Home = ({ navigation }) => {
       <View style={{ paddingHorizontal: 40, marginTop: 25 }}>
         <Text
           style={{
-            fontSize: 30,
+            fontSize: 27,
             color: "#522289",
             fontFamily: "RobotoBold",
           }}
@@ -36,126 +96,140 @@ const Home = ({ navigation }) => {
           Bem Vindo, {nome}
         </Text>
 
-        <View
+        <Text
           style={{
-            paddingTop: "50px",
+            color: "#522289",
+            fontFamily: "RobotoRegular",
+            marginTop: 50,
+            fontSize: 18,
           }}
         >
-          <TouchableOpacity
-             onPress={() => navigation.navigate("relatorio")}
-            style={{
-              flexDirection: "row",
-              backgroundColor: "#DEE2E6",
-              marginBottom: 20,
-              alignItems: "center",
-              borderRadius: 12,
-              height: 130,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 7,
-            }}
-          >
-            <View
-              style={{
-                paddingLeft: 25,
-                width: 200,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "700" }}>
-                Veja as opções de relátorio
-              </Text>
+          Tenha uma breve visão dos Anuncios 
+        </Text>
+        
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginHorizontal: -40, marginTop: 30 }}
+        >
+          <FlatList
+            horizontal
+            snapToAlignment={"start"}
+            data={list}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  backgroundColor: "#FEFEFE",
+                  height: 200,
+                  width: 210,
+                  borderRadius: 15,
+                  marginHorizontal: 10,
+                  padding: 0.5,
+                }}
+              >
+                <Item onPress={() => showDetailsAnu(item)}>
+                  <ItemImage source={item.img} />
+                  <ItemTitle>{item.fabricante}</ItemTitle>
+               
+                </Item>
+              </View>
+            )}
+          />
+      
+        </ScrollView>
 
-              <Icon
-                name="lightbulb-on"
-                size={50}
-                color="#36343A"
-                style={{ width: 20, padding: 2, marginLeft: 25 }}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-             onPress={() => navigation.navigate("usuarios")}
-            style={{
+        <Text
+          style={{
+            color: "#fff",
+            fontFamily: "RobotoRegular",
+            marginTop: 40,
+            fontSize: 17,
+          }}
+        >
+          Usuarios
+        </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginHorizontal: -40, marginTop: 20 }}
+        >
+        
+
+<FlatList
+            horizontal
+            snapToAlignment={"start"}
+            data={users}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+              style={{
               
-              flexDirection: "row",
-              backgroundColor: "#DEE2E6",
-              marginBottom: 20,
-              alignItems: "center",
-              borderRadius: 12,
-              height: 130,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 7,
-            }}
-          >
-            <View
-              style={{
-                paddingLeft: 25,
-                width: 200,
-                flexDirection: "row",
-                alignItems: "center",
+                backgroundColor: "#FEFEFE",
+                height: 80,
+                width: 210,
+                borderRadius: 15,
+                marginHorizontal: 10,
+                padding: 0.5,
               }}
+              onPress={() => showDetailsUsu(item)}
             >
-              <Text style={{ fontSize: 18, fontWeight: "700" }}>
-                Venha adminstrar seus usuarios
-              </Text>
+                <Item style={{  flexDirection: "row",}} >
+                <View
+                  style={{
+                    width: 40,
+                    height: 50,
+                 
+             
+                  
+                    borderRadius: 2,
+                  }}
+                >
+                  <Image
+                    source={require("../images/perfil3.png")}
+                    style={{ width: 60, height: 60, borderRadius: 40 }}
+                  />
+                </View>
+                <View style={{justifyContent: "start"}}>
+                  <Text style= {{  fontWeight: 'bold',
+  fontSize: '17px',
+  paddingTop: '5px', paddingLeft: 30}}>{item.nome}</Text>
+                    <Text style= {{  fontWeight: 'bold',
+  fontSize: '17px',
+  paddingTop: '5px', paddingLeft: 30}}>{item.telefone}</Text>
 
-              <Icon
-           name="account-multiple"
-                size={50}
-                color="#36343A"
-                style={{ width: 20, padding: 2, marginLeft: 25 }}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-          onPress={() => navigation.navigate("anuncios")}
+  
+               </View>
+                </Item>
+              </TouchableOpacity>
+            )}
+          />
+           </ScrollView>
+
+           
+        <TouchableOpacity
+          underlayColor="#6600bb"
+          onPress={() => logout()}
+          style={{
+            width: 200,
+            marginTop: 40,
+            marginLeft: 50,
+            backgroundColor: "#EF6666",
+            paddingVertical: 10,
+            borderRadius: 15,
+        
+          }}
+        >
+          <Text
             style={{
-              flexDirection: "row",
-              backgroundColor: "#DEE2E6",
-              marginBottom: 20,
-              alignItems: "center",
-              borderRadius: 12,
-              height: 130,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 7,
+              fontFamily: "RobotoBold",
+              color: "#FFF",
+              textAlign: "center",
+              fontSize: 18,
             }}
           >
-            <View
-              style={{
-                paddingLeft: 25,
-                width: 200,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "700" }}>
-                De uma olhada nos anuncios
-              </Text>
-              <Icon
-                name="car-sports"
-                size={50}
-                color="#36343A"
-                style={{ width: 20, padding: 2, marginLeft: 25 }}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+            Sair da Aplicação   X
+          </Text>
+        </TouchableOpacity>
+
       </View>
     </ImageBackground>
   );

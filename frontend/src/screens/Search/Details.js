@@ -39,6 +39,7 @@ const Details = ({ navigation, route }) => {
     valor_veiculo,
     views,
     id,
+    email,
     ano_modelo,
     ano_fabricacao,
     desc_marca,
@@ -139,7 +140,7 @@ const Details = ({ navigation, route }) => {
                 fontSize: 22,
               }}
             >
-              {valor_veiculo}$
+              R${valor_veiculo}
             </Text>
           </View>
 
@@ -170,7 +171,7 @@ const Details = ({ navigation, route }) => {
               fontSize: 17,
             }}
           >
-            Ano do modelo:
+            Ano do modelo: 
             {ano_modelo}
           </Text>
           <Text
@@ -183,6 +184,17 @@ const Details = ({ navigation, route }) => {
           >
             {desc_marca}
           </Text>
+          <Text
+            style={{
+              fontFamily: "RobotoBold",
+              color: "#522289",
+              fontSize: 18,
+              padding: 5,
+            }}
+          >
+            Email de contato:{email}
+          </Text>
+
 
           <Text
             style={{
@@ -213,29 +225,7 @@ const Details = ({ navigation, route }) => {
               {desc_veiculo}
             </Text>
           </View>
-          <Button
-            onPress={() =>
-              db
-                .collection("MESSAGE_THREADS")
-                .add({
-                  name: `${name}, de ${by}`,
-                  latestMessage: {
-                    text: `olá ${name}`,
-                    createdAt: new Date().getTime(),
-                  },
-                })
-                .then((docRef) => {
-                  docRef.collection("MESSAGES").add({
-                    text: `Hello`,
-                    createdAt: new Date().getTime(),
-                    system: true,
-                  });
-                  navigation.navigate("ChatRoom");
-                })
-            }
-          >
-            <ButtonText>CHAT</ButtonText>
-          </Button>
+         
         </View>
       </ScrollView>
     </ImageBackground>

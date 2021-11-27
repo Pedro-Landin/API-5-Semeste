@@ -37,7 +37,8 @@ const Home = ({navigation}) => {
   const [ativos, setAtivos] = useState();
   const { user, setUser } = useAuth();
 
-  const { email, nome } = user;
+  const { email, nome, cpf } = user;
+
 
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
@@ -46,8 +47,8 @@ const Home = ({navigation}) => {
 
   
 
-  const getanunciosAtivos = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/ativos/anuncios`);
+  const getanunciosAtivos = async (cpf_anunciante) => {
+    const res = await fetch(`http://127.0.0.1:5000/quantos/anunciosAtivos/${cpf_anunciante}`);
     const anuncios = await res.json();
     setAtivos(anuncios);
   };
@@ -61,7 +62,7 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     getAnuncios();
-    getanunciosAtivos();
+    getanunciosAtivos(cpf);
   }, []);
 
   return (

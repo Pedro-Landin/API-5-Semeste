@@ -26,9 +26,7 @@ const icons = {
     Usuarios: {
         name: 'list'
     },
-    Sair: {
-        name: 'exit'
-    },
+  
 }
 
 const BottomTab = () => {
@@ -72,11 +70,7 @@ const BottomTab = () => {
                 name='Usuarios'
                 component={Usuarios}
             />
-            <Tab.Screen
-                name='Sair' 
-                component={ChatRoom}
-                
-            />
+           
         </Tab.Navigator>
     )
 }

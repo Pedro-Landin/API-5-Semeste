@@ -8,6 +8,7 @@ import smtplib
 from flask import Flask, request
 from flask_pymongo import PyMongo, ObjectId
 from flask_cors import CORS
+from flask_swagger_ui import get_swaggerui_blueprint
 import json
 import datetime
 
@@ -19,7 +20,6 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb+srv://jsoeiro:1234@bycardb.lrp4p.mongodb.net/dbycar' #conexao com o mongo 
 mongo = PyMongo(app)
 CORS(app)
-
 
 
 
@@ -98,7 +98,15 @@ def create():
             print(senha)
             Cadastro.sender_email(email, senha)
             mongo.db.usuarios.insert_one(data[x])
-            x+=1       
+            mongo.db.dadosbkp.insert_one(data[x])
+
+            x+=1 
+        mongo.db.dadosbkp.update_many(
+        {}, 
+        { "$unset": {  'nome': "", 'email': "", 'telefone': "",'endereco': "", 'senha': "", 'status': "", 'cod': "", 
+        'atividade': "", 'cpf': "" }}
+        )      
+
        
         return 'Arquivo enviado com sucesso!'
 
@@ -109,7 +117,8 @@ def create():
 def users():
     users = []
     for usuario in mongo.db.usuarios.find():
-        users.append({
+        if usuario['cod'] == 0:
+            users.append({
             '_id' : str(ObjectId(usuario['_id'])),
             'nome' : usuario['nome'],
             'cpf' : usuario['cpf'],
@@ -129,7 +138,7 @@ def users():
 @app.route('/quantos/usuarios', methods = ["GET"])
 def quantosUsers():
     
-    users = mongo.db.usuarios.find().count()
+    users = mongo.db.usuarios.find({"cod": 0}).count()
     return jsonify(users)
 
 #lista usuario por id
@@ -155,6 +164,7 @@ def update_user(id):
     _json = request.json
     _nome = _json['nome']
     _cpf = _json['cpf']
+    _cod = _json['cod']
     _email = _json['email']
     _telefone = _json['telefone']
     _endereco = _json['endereco']
@@ -163,6 +173,7 @@ def update_user(id):
         {'id':int(id)}, {"$set":{
                                 'nome' : _nome,
                                 'cpf': _cpf, 
+                                'cod' : _cod,
                                 'email': _email,
                                 'telefone': _telefone,
                                 'endereco': _endereco,}})
@@ -267,6 +278,7 @@ def lista_anuncio():
                 'cpf_anunciante': doc['cpf_anunciante'],
                 'valor_veiculo': doc['valor_veiculo'],
                 'id': doc['id'],
+                'email': doc['email'],
                 'img': doc['img'],
                 'visualizacao': doc['visualizacao'],
                 'views': doc['views']
@@ -274,7 +286,7 @@ def lista_anuncio():
     return jsonify(anuncios)
 
 
-#lista todos os anuncios
+#lista todos os anuncios sem verificar se esta pausado ou não 
 @app.route('/listar/anunciosADM', methods = ["GET"])
 def lista_anuncioADM():
     anuncios = []
@@ -290,6 +302,7 @@ def lista_anuncioADM():
                 'cpf_anunciante': doc['cpf_anunciante'],
                 'valor_veiculo': doc['valor_veiculo'],
                 'id': doc['id'],
+                'email': doc['email'],
                 'img': doc['img'],
                 'visualizacao': doc['visualizacao'],
                 'views': doc['views']
@@ -315,6 +328,7 @@ def lista5anuncio():
                 'cpf_anunciante': doc['cpf_anunciante'],
                 'valor_veiculo': doc['valor_veiculo'],
                 'id': doc['id'],
+                'email': doc['email'],
                 'img': doc['img'],
                 'visualizacao': doc['visualizacao'],
                 'views': doc['views']
@@ -336,6 +350,7 @@ def anuncio(cpf_anunciante):
            'ano_modelo': doc[ 'ano_modelo'],
            'cpf_anunciante': doc['cpf_anunciante'],
            'valor_veiculo': doc['valor_veiculo'],
+           'email': doc['email'],
            'id': doc['id'],
            'img': doc['img'],
            'visualizacao': doc['visualizacao'],
@@ -344,12 +359,15 @@ def anuncio(cpf_anunciante):
     return jsonify(anuncios)
 
 
+
+
 #Contar quantos anuncios o anunciante tem
-@app.route('/quantos/anuncio/<cpf_anunciante>', methods = ["GET"])
+@app.route('/quantos/anunciosAtivos/<cpf_anunciante>', methods = ["GET"])
 def quantos(cpf_anunciante):
 
-    anuncios = mongo.db.anuncios.find({'cpf_anunciante': int(cpf_anunciante)}).count()
+    anuncios = mongo.db.anuncios.find({'cpf_anunciante': int(cpf_anunciante), "visualizacao": 1}).count()
     return jsonify(anuncios)
+
 
 
 #Contar quantos anuncios no total o sistema tem 
@@ -417,8 +435,8 @@ def updateAnuncios(id):
          'desc_veiculo': request.json['desc_veiculo'],
          'cod_anunciante': request.json['cod_anunciante'],
          'ano_fabricacao': request.json['ano_fabricacao'],
+         'email': request.json['email'],
          'ano_modelo': request.json['ano_modelo'],
-        
          'valor_veiculo': request.json['valor_veiculo'],
         }})
      return jsonify({'message': 'Anuncio atualizado'})

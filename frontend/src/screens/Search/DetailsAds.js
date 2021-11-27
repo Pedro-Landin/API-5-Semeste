@@ -29,6 +29,7 @@ const DetailsAds = ({ navigation, route }) => {
   const [visualizacao, setVisualizacao] = useState(anuncios.visualizacao)
   const [valor_veiculo, setPreco] = useState(anuncios.valor_veiculo);
   const [cod_anunciante, setCod] = useState(anuncios.cod_anunciante);
+  const [email, setEmail] = useState(anuncios.email);
 
 const [pausado, setDespausado] = useState(visualizacao)
 
@@ -42,7 +43,7 @@ const [pausado, setDespausado] = useState(visualizacao)
         fabricante,
         ano_fabricacao,
         ano_modelo,
- 
+        email,
         cod_anunciante,
         desc_marca,
         desc_veiculo,
@@ -236,6 +237,26 @@ const [pausado, setDespausado] = useState(visualizacao)
               <InputEdit
                 onChangeText={(t) => setPreco(t)}
                 value={valor_veiculo}
+              />
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                alignItems: "flex-start",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "RobotoBold",
+                  color: "#4b3ca7",
+                  fontSize: 20,
+                }}
+              >
+                E-mail:
+              </Text>
+              <InputEdit
+                onChangeText={(e) => setEmail(e)}
+                value={email}
               />
             </View>
 

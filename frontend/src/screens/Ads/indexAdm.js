@@ -28,9 +28,6 @@ const AnunciosAdm = ({ navigation }) => {
   const [list, setList] = useState();
   const [todos, setTodos] = useState();
 
-
-
-
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
     navigation.navigate("Details", { ...item });

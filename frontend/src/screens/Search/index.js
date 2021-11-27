@@ -61,6 +61,7 @@ const Home = ({ navigation }) => {
     const anuncios = await res.json();
     setList(anuncios);
     setTodos(anuncios);
+    console.log(anuncios.email)
   };
 
   useEffect(() => {
