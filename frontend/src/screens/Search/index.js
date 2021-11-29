@@ -1,35 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  Text,
-  ImageBackground,
-} from "react-native";
+import { ScrollView, Text, ImageBackground } from "react-native";
 import {
   BasicContainer,
   Item,
   ItemImage,
   ItemTitle,
-  ItemText,
   ContainerInfo,
   ContainerAnuncio,
-  HeadContainer,
 } from "../../components/style";
-import { Button, SubTitle } from "../../components/styles";
+import { SubTitle } from "../../components/styles";
 import SearchInput from "../../components/Input/searchInput";
 import { FlatList, View } from "react-native";
-//import user from "../../data/";
-import Header from "../../components/header";
 
 const Home = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState();
   const [todos, setTodos] = useState();
-
-
-
 
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
@@ -57,17 +44,16 @@ const Home = ({ navigation }) => {
   }, [searchText]);
 
   const getAnuncios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/anuncios`);
+    const res = await fetch(`http://192.168.0.16:5000/listar/anuncios`);
     const anuncios = await res.json();
     setList(anuncios);
     setTodos(anuncios);
-    console.log(anuncios.email)
+    console.log(anuncios.email);
   };
 
   useEffect(() => {
     getAnuncios();
   }, []);
-
 
   return (
     <ImageBackground
@@ -127,7 +113,7 @@ const Home = ({ navigation }) => {
                       {" "}
                       Valor:{" "}
                     </Text>
-                    <View style={{ padding: 2 }}>{item.valor_veiculo}$</View>
+                    <View style={{ padding: 2 }}>{item.valor_veiculo}R$</View>
                   </View>
                 </ContainerAnuncio>
               </Item>

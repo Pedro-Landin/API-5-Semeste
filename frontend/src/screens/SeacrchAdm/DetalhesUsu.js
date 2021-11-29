@@ -1,32 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   ImageBackground,
   Image,
-  Dimensions,
-  StyleSheet,
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
-
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-
-const screenWidth = Math.round(Dimensions.get("window").width);
-const screenHeight = Math.round(Dimensions.get("window").height);
 
 const DetalhesUsu = ({ navigation, route }) => {
   const { nome, email, cpf, id, endereco, telefone } = route.params;
 
-  
   //Rota de deletar anuncio
   const Deletion = async (id) => {
-    const res = await fetch(`http://127.0.0.1:5000/deletar/usuario/${id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/deletar/usuario/${id}`, {
       method: "PUT",
     });
   };
-
 
   return (
     <ImageBackground
@@ -96,7 +86,6 @@ const DetalhesUsu = ({ navigation, route }) => {
             }}
           >
             Nome:
-        
           </Text>
           <Text
             style={{
@@ -139,7 +128,6 @@ const DetalhesUsu = ({ navigation, route }) => {
             }}
           >
             Endereço:
-           
           </Text>
           <Text
             style={{
@@ -161,7 +149,6 @@ const DetalhesUsu = ({ navigation, route }) => {
             }}
           >
             CPF:
-           
           </Text>
           <Text
             style={{
@@ -172,7 +159,6 @@ const DetalhesUsu = ({ navigation, route }) => {
           >
             {cpf}
           </Text>
-          
 
           <Text
             style={{
@@ -184,7 +170,6 @@ const DetalhesUsu = ({ navigation, route }) => {
             }}
           >
             Telefone:
-           
           </Text>
           <Text
             style={{
@@ -193,7 +178,7 @@ const DetalhesUsu = ({ navigation, route }) => {
               fontSize: 18,
             }}
           >
-          {telefone}
+            {telefone}
           </Text>
 
           <TouchableHighlight

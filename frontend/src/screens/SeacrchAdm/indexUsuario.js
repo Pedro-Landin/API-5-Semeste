@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
   FlatList,
   Image,
@@ -24,7 +23,7 @@ const Usuarios = ({ navigation }) => {
   };
 
   const getUsuarios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/usuarios`);
+    const res = await fetch(`http://192.168.0.16:5000/listar/usuarios`);
     const usuarios = await res.json();
     setList(usuarios);
     setTodos(usuarios);
@@ -69,7 +68,7 @@ const Usuarios = ({ navigation }) => {
         />
         <SubTitle>Resultados...</SubTitle>
         <form //Rota do banco python
-            action="http://127.0.0.1:5000/create/user"
+            action="http://192.168.0.16:5000/create/user"
             method="POST"
             encType="multipart/form-data"
           >

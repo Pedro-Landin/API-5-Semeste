@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
-import { api } from "../../services/api";
+import React, { useState } from "react";
 import TextInput from "../../components/Input";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import {
@@ -10,15 +9,10 @@ import {
   FormArea,
   Button,
   ButtonText,
-  MsgBox,
-  Line,
   StyledText,
 } from "../../components/styles";
 import { StatusBar } from "expo-status-bar";
-import { Formik } from "formik";
-import { CredentialsContext } from "../../context/credentials";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator } from "react-native";
 import { useAuth } from "../../context/auth";
 
 const PasswordRecovery = () => {
@@ -26,8 +20,9 @@ const PasswordRecovery = () => {
   const { user, setUser } = useAuth();
 
   const clearLogin = () => {
-    AsyncStorage.removeItem("user")
-    setUser( { estaLogado: false,
+    AsyncStorage.removeItem("user");
+    setUser({
+      estaLogado: false,
       atividade: "",
       cod: "",
       cpf: "",
@@ -36,11 +31,12 @@ const PasswordRecovery = () => {
       nome: "",
       senha: "",
       status: "",
-      telefone: "", });
+      telefone: "",
+    });
   };
 
   const Update = async (id) => {
-    const res = await fetch(`http://127.0.0.1:5000/updatesenha/${id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/updatesenha/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -50,10 +46,8 @@ const PasswordRecovery = () => {
       }),
     });
     const password = await res.json();
-    setSenha(password)
-    
-   
-  }
+    setSenha(password);
+  };
 
   return (
     <KeyboardAvoidingWrapper>
@@ -72,15 +66,12 @@ const PasswordRecovery = () => {
                 label="Senha"
                 placeholder="Insira sua nova senha"
                 onChangeText={(value) => setSenha(value)}
-              
               />
               <TextInput
                 label="Cofirmação de Senha"
                 placeholder="Reinsira sua nova senha"
                 onChangeText={(value) => setSenha(value)}
-             
               />
-              
 
               <Button onPress={() => Update(user.id)}>
                 <ButtonText>REDEFINIR</ButtonText>

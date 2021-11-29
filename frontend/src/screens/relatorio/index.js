@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-
+import React, {  useEffect, useState } from "react";
 import { ImageBackground, ScrollView, Text, View } from "react-native";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { BasicContainer } from "../../components/style";
-import { SubTitle } from "../../components/styles";
+
 const Relatorio = ({ navigation }) => {
   const [usuarios, setUsuarios] = useState();
   const [anunciosT, setAnunciosT] = useState();
@@ -11,25 +9,25 @@ const Relatorio = ({ navigation }) => {
   const [anunciosP, setAnunciosP] = useState();
 
   const getUsuarios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/quantos/usuarios`);
+    const res = await fetch(`http://192.168.0.16:5000/quantos/usuarios`);
     const usuarios = await res.json();
     setUsuarios(usuarios);
   };
 
   const getAnunciosTotal = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/quantos/anuncios`);
+    const res = await fetch(`http://192.168.0.16:5000/quantos/anuncios`);
     const anuncios = await res.json();
     setAnunciosT(anuncios);
   };
 
   const getAnunciosAtivos = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/ativos/anuncios`);
+    const res = await fetch(`http://192.168.0.16:5000/ativos/anuncios`);
     const anuncios = await res.json();
     setAnunciosA(anuncios);
   };
 
   const getAnunciosPausados = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/pausados/anuncios`);
+    const res = await fetch(`http://192.168.0.16:5000/pausados/anuncios`);
     const anuncios = await res.json();
     setAnunciosP(anuncios);
   };
@@ -57,7 +55,7 @@ const Relatorio = ({ navigation }) => {
             color: "black",
           }}
         >
-         Relatorios disponiveis...
+          Relatorios disponiveis...
         </Text>
       </BasicContainer>
 
@@ -142,8 +140,10 @@ const Relatorio = ({ navigation }) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}>
-   Anuncios Cadastrados
+                <Text
+                  style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}
+                >
+                  Anuncios Cadastrados
                 </Text>
                 <View
                   style={{
@@ -155,9 +155,8 @@ const Relatorio = ({ navigation }) => {
                     backgroundColor: "#5facdb",
                   }}
                 >
-                   {anunciosT}
+                  {anunciosT}
                 </View>
-              
               </View>
             </View>
             <View
@@ -179,13 +178,14 @@ const Relatorio = ({ navigation }) => {
             >
               <View
                 style={{
-           
                   width: 300,
                   flexDirection: "column",
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}>
+                <Text
+                  style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}
+                >
                   Anuncios Ativos
                 </Text>
                 <View
@@ -198,9 +198,8 @@ const Relatorio = ({ navigation }) => {
                     backgroundColor: "#5facdb",
                   }}
                 >
-                   {anunciosA}
+                  {anunciosA}
                 </View>
-               
               </View>
             </View>
             <View
@@ -222,13 +221,14 @@ const Relatorio = ({ navigation }) => {
             >
               <View
                 style={{
-         
                   width: 300,
                   flexDirection: "column",
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}>
+                <Text
+                  style={{ fontSize: 18, fontWeight: "700", paddingBottom: 5 }}
+                >
                   Anuncios Pausados
                 </Text>
                 <View
@@ -241,10 +241,8 @@ const Relatorio = ({ navigation }) => {
                     backgroundColor: "#5facdb",
                   }}
                 >
-                 {anunciosP}
+                  {anunciosP}
                 </View>
-
-               
               </View>
             </View>
           </View>

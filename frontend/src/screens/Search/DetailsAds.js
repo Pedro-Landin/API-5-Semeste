@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   Image,
@@ -8,12 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
-  TouchableOpacity,
 } from "react-native";
-import { Pad, DetailsView, Container } from "../../components/style";
-import { Button, ButtonText } from "../../components/styles";
-import { StatusBar } from "expo-status-bar";
-//import { db } from "../../services/firebase";
 import InputEdit from "../../components/Input/InputEdit";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
@@ -26,15 +21,15 @@ const DetailsAds = ({ navigation, route }) => {
   const [desc_marca, setDescM] = useState(anuncios.desc_marca);
   const [ano_fabricacao, setAnoF] = useState(anuncios.ano_fabricacao);
   const [ano_modelo, setAno_Modelo] = useState(anuncios.ano_modelo);
-  const [visualizacao, setVisualizacao] = useState(anuncios.visualizacao)
+  const [visualizacao, setVisualizacao] = useState(anuncios.visualizacao);
   const [valor_veiculo, setPreco] = useState(anuncios.valor_veiculo);
   const [cod_anunciante, setCod] = useState(anuncios.cod_anunciante);
   const [email, setEmail] = useState(anuncios.email);
 
-const [pausado, setDespausado] = useState(visualizacao)
+  const [pausado, setDespausado] = useState(visualizacao);
 
   const Edinting = async (Id) => {
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/anuncio/${Id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/atualizar/anuncio/${Id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -94,49 +89,44 @@ const [pausado, setDespausado] = useState(visualizacao)
               borderRadius: 15,
             }}
           >
-    
-            { pausado === 0 ?
-             (
-             <View
-             style={{
-               paddingTop: 20,
-
-               alignItems: "flex-start",
-             }}
-           >
-             <Text
-               style={{
-                 fontFamily: "RobotoBold",
-                 color: "#4b3ca7",
-                 fontSize: 20,
-               }}
-             >
-               Pausado
-             </Text>
-           </View>
-            
-            ) :
-            (
-        
-            <View
-              style={{
-                paddingTop: 20,
-
-                alignItems: "flex-start",
-              }}
-            >
-              <Text
+            {pausado === 0 ? (
+              <View
                 style={{
-                  fontFamily: "RobotoBold",
-                  color: "#4b3ca7",
-                  fontSize: 20,
+                  paddingTop: 20,
+
+                  alignItems: "flex-start",
                 }}
               >
-                Despausado
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontFamily: "RobotoBold",
+                    color: "#4b3ca7",
+                    fontSize: 20,
+                  }}
+                >
+                  Pausado
+                </Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  paddingTop: 20,
+
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "RobotoBold",
+                    color: "#4b3ca7",
+                    fontSize: 20,
+                  }}
+                >
+                  Despausado
+                </Text>
+              </View>
             )}
-        
+
             <View
               style={{
                 paddingTop: 20,
@@ -151,7 +141,7 @@ const [pausado, setDespausado] = useState(visualizacao)
                   fontSize: 20,
                 }}
               >
-                Fabricante:
+                Modelo:
               </Text>
               <InputEdit
                 onChangeText={(fabricante) => setFabricante(fabricante)}
@@ -172,7 +162,7 @@ const [pausado, setDespausado] = useState(visualizacao)
                   fontSize: 20,
                 }}
               >
-                Descrição do Veiculo:
+                Fabricante:
               </Text>
               <InputEdit onChangeText={(t) => setDescM(t)} value={desc_marca} />
             </View>
@@ -254,10 +244,7 @@ const [pausado, setDespausado] = useState(visualizacao)
               >
                 E-mail:
               </Text>
-              <InputEdit
-                onChangeText={(e) => setEmail(e)}
-                value={email}
-              />
+              <InputEdit onChangeText={(e) => setEmail(e)} value={email} />
             </View>
 
             <TouchableHighlight

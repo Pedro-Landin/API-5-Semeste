@@ -1,61 +1,34 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Container,
-  SubTitle,
-  Button,
-  ButtonText,
-} from "../../components/styles";
-import { StatusBar } from "expo-status-bar";
-//import { Dimensions, FlatList, View } from "react-native";
-import Header from "../../components/header";
-import { HeadContainer, Item } from "../../components/style";
-import ListaHorizontal from "../../components/FlatList/ListaHorizontal";
-import {
-  BasicContainer,
-  ItemImage,
-  ItemTitle,
-  ItemText,
-  ContainerInfo,
-  ContainerAnuncio,
-} from "../../components/style";
-
+import React, { useEffect, useState } from "react";
+import { Item } from "../../components/style";
+import { ItemImage, ItemTitle, ItemText } from "../../components/style";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import {
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  TextInput,
-  FlatList,
-} from "react-native";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { View, Text, ImageBackground, FlatList } from "react-native";
+
 import { useAuth } from "../../context/auth";
 
 //const { width} = Dimensions.get('window');
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [list, setList] = useState();
   const [ativos, setAtivos] = useState();
   const { user, setUser } = useAuth();
 
   const { email, nome, cpf } = user;
 
-
   //Passando para imagem de detalhes do anuncio
   const showDetails = (item) => {
     navigation.navigate("Details", { ...item });
   };
 
-  
-
   const getanunciosAtivos = async (cpf_anunciante) => {
-    const res = await fetch(`http://127.0.0.1:5000/quantos/anunciosAtivos/${cpf_anunciante}`);
+    const res = await fetch(
+      `http://192.168.0.16:5000/quantos/anunciosAtivos/${cpf_anunciante}`
+    );
     const anuncios = await res.json();
     setAtivos(anuncios);
   };
 
-
-  const getAnuncios= async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar5/anuncios`);
+  const getAnuncios = async () => {
+    const res = await fetch(`http://192.168.0.16:5000/listar5/anuncios`);
     const anuncios = await res.json();
     setList(anuncios);
   };
@@ -78,7 +51,7 @@ const Home = ({navigation}) => {
             fontFamily: "RobotoBold",
           }}
         >
-          Bem Vindo {nome}
+          Bem Vindo, {nome}
         </Text>
 
         <View style={{ alignItems: "center" }}>
@@ -122,7 +95,6 @@ const Home = ({navigation}) => {
             Anuncios ativos
           </Text>
         </View>
-      
 
         <Text
           style={{
@@ -159,7 +131,7 @@ const Home = ({navigation}) => {
                   <ItemImage source={item.img} />
                   <ItemTitle>{item.fabricante}</ItemTitle>
                   <ItemText>Ano do modelo: {item.ano_modelo}</ItemText>
-                  <ItemText>Valor: {item.valor_veiculo}$</ItemText>
+                  <ItemText>Valor: {item.valor_veiculo}R$</ItemText>
                 </Item>
               </View>
             )}

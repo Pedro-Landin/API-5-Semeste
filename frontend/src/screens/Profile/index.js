@@ -1,44 +1,27 @@
-import React, { useContext, useState } from "react";
-
-import {
-  Container,
-  InnerContainer,
-  SubTitle,
-  PageTitle,
-  Button,
-  ButtonText,
-} from "../../components/styles";
+import React, { useState } from "react";
 import {
   ImageBackground,
   Image,
-  Dimensions,
-  StyleSheet,
   ScrollView,
   View,
   Text,
   TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { BasicContainer, HeadContainer, imageContainer } from "../../components/style";
-import Header from "../../components/header";
 import { useAuth } from "../../context/auth";
 import InputEdit from "../../components/Input/InputEdit";
 
 const Profile = () => {
   const { user, setUser } = useAuth();
-  const [nome,setNome] = useState(user.nome);
-  const [cpf,setCpf] = useState(user.cpf);
-  const [email,setEmail] = useState(user.email);
-  const [telefone,setTelefone] = useState(user.telefone);
-  const [endereco,setEndereco] = useState(user.endereco);
- 
+  const [nome, setNome] = useState(user.nome);
+  const [cpf, setCpf] = useState(user.cpf);
+  const [email, setEmail] = useState(user.email);
+  const [telefone, setTelefone] = useState(user.telefone);
+  const [endereco, setEndereco] = useState(user.endereco);
 
   const Edinting = async (Id) => {
-
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/usuario/${Id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/atualizar/usuario/${Id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -49,18 +32,14 @@ const Profile = () => {
         email,
         telefone,
         endereco,
-       
       }),
     });
-   
-    const novoUsuario = await res.json();
-    console.log(novoUsuario)
-    novoUsuario.estaLogado = true
-    AsyncStorage.setItem("user", JSON.stringify(novoUsuario))
-   
-  };
 
-  
+    const novoUsuario = await res.json();
+    console.log(novoUsuario);
+    novoUsuario.estaLogado = true;
+    AsyncStorage.setItem("user", JSON.stringify(novoUsuario));
+  };
 
   async function logout() {
     await AsyncStorage.removeItem("user");
@@ -76,9 +55,9 @@ const Profile = () => {
       status: "",
       telefone: "",
     });
-  //  console.log("tets")
+
   }
-  //console.log(newUser)
+ 
   return (
     <ImageBackground
       source={require("../images/back2.png")}
@@ -139,7 +118,7 @@ const Profile = () => {
               fontSize: 18,
             }}
           >
-            Sair da Aplicação   X
+            Sair da Aplicação X
           </Text>
         </TouchableOpacity>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   Image,
@@ -7,26 +7,7 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
 } from "react-native";
-import {
-  DetailsHead,
-  DetailsHeadView,
-  DetailsPrice,
-  DetailsProperties,
-  Pad,
-  DetailsView,
-  DetailsValue,
-  Description,
-  Container,
-  ItemText,
-  Informations,
-} from "../../components/style";
-import { Button, ButtonText } from "../../components/styles";
-import { StatusBar } from "expo-status-bar";
-import { db } from "../../services/firebase";
-
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
@@ -44,18 +25,17 @@ const Details = ({ navigation, route }) => {
     ano_fabricacao,
     desc_marca,
   } = route.params;
-  
+
   const [view, setView] = useState(views);
 
-  
   const Edit = async (Id) => {
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/view/${Id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/atualizar/view/${Id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        views: view
+        views: view,
       }),
     });
     const v = await res.json();
@@ -171,7 +151,7 @@ const Details = ({ navigation, route }) => {
               fontSize: 17,
             }}
           >
-            Ano do modelo: 
+            Ano do modelo:
             {ano_modelo}
           </Text>
           <Text
@@ -194,7 +174,6 @@ const Details = ({ navigation, route }) => {
           >
             Email de contato:{email}
           </Text>
-
 
           <Text
             style={{
@@ -225,7 +204,6 @@ const Details = ({ navigation, route }) => {
               {desc_veiculo}
             </Text>
           </View>
-         
         </View>
       </ScrollView>
     </ImageBackground>

@@ -1,25 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import {
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  TextInput,
-  FlatList,
-} from "react-native";
-import {
- 
-  ItemImage,
-  ItemTitle,
-  Item,
-  ItemText,
-} from "../../components/style";
-
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { View, Text, Image, ImageBackground, FlatList } from "react-native";
+import { ItemImage, ItemTitle, Item } from "../../components/style";
 import { useAuth } from "../../context/auth";
-import { BasicContainer } from "../../components/style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //const { width} = Dimensions.get('window');
@@ -39,8 +22,6 @@ const Home = ({ navigation }) => {
     navigation.navigate("Detalhes", { ...item });
   };
 
-  
-
   async function logout() {
     await AsyncStorage.removeItem("user");
     setUser({
@@ -55,26 +36,21 @@ const Home = ({ navigation }) => {
       status: "",
       telefone: "",
     });
-  //  console.log("tets")
+    //  console.log("tets")
   }
 
-
   const getAnuncios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/anunciosADM`);
+    const res = await fetch(`http://192.168.0.16:5000/listar/anunciosADM`);
     const anuncios = await res.json();
     setList(anuncios);
-
   };
 
-  
   const getUsuarios = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/listar/usuarios`);
+    const res = await fetch(`http://192.168.0.16:5000/listar/usuarios`);
     const usuarios = await res.json();
     setUsers(usuarios);
-    
   };
 
-  
   useEffect(() => {
     getAnuncios();
     getUsuarios();
@@ -104,9 +80,9 @@ const Home = ({ navigation }) => {
             fontSize: 18,
           }}
         >
-          Tenha uma breve visão dos Anuncios 
+          Tenha uma breve visão dos Anuncios
         </Text>
-        
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -130,12 +106,10 @@ const Home = ({ navigation }) => {
                 <Item onPress={() => showDetailsAnu(item)}>
                   <ItemImage source={item.img} />
                   <ItemTitle>{item.fabricante}</ItemTitle>
-               
                 </Item>
               </View>
             )}
           />
-      
         </ScrollView>
 
         <Text
@@ -153,58 +127,64 @@ const Home = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           style={{ marginHorizontal: -40, marginTop: 20 }}
         >
-        
-
-<FlatList
+          <FlatList
             horizontal
             snapToAlignment={"start"}
             data={users}
             renderItem={({ item }) => (
               <TouchableOpacity
-              style={{
-              
-                backgroundColor: "#FEFEFE",
-                height: 80,
-                width: 210,
-                borderRadius: 15,
-                marginHorizontal: 10,
-                padding: 0.5,
-              }}
-              onPress={() => showDetailsUsu(item)}
-            >
-                <Item style={{  flexDirection: "row",}} >
-                <View
-                  style={{
-                    width: 40,
-                    height: 50,
-                 
-             
-                  
-                    borderRadius: 2,
-                  }}
-                >
-                  <Image
-                    source={require("../images/perfil3.png")}
-                    style={{ width: 60, height: 60, borderRadius: 40 }}
-                  />
-                </View>
-                <View style={{justifyContent: "start"}}>
-                  <Text style= {{  fontWeight: 'bold',
-  fontSize: '17px',
-  paddingTop: '5px', paddingLeft: 30}}>{item.nome}</Text>
-                    <Text style= {{  fontWeight: 'bold',
-  fontSize: '17px',
-  paddingTop: '5px', paddingLeft: 30}}>{item.telefone}</Text>
+                style={{
+                  backgroundColor: "#FEFEFE",
+                  height: 80,
+                  width: 210,
+                  borderRadius: 15,
+                  marginHorizontal: 10,
+                  padding: 0.5,
+                }}
+                onPress={() => showDetailsUsu(item)}
+              >
+                <Item style={{ flexDirection: "row" }}>
+                  <View
+                    style={{
+                      width: 40,
+                      height: 50,
 
-  
-               </View>
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Image
+                      source={require("../images/perfil3.png")}
+                      style={{ width: 60, height: 60, borderRadius: 40 }}
+                    />
+                  </View>
+                  <View style={{ justifyContent: "start" }}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "17px",
+                        paddingTop: "5px",
+                        paddingLeft: 30,
+                      }}
+                    >
+                      {item.nome}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "17px",
+                        paddingTop: "5px",
+                        paddingLeft: 30,
+                      }}
+                    >
+                      {item.telefone}
+                    </Text>
+                  </View>
                 </Item>
               </TouchableOpacity>
             )}
           />
-           </ScrollView>
+        </ScrollView>
 
-           
         <TouchableOpacity
           underlayColor="#6600bb"
           onPress={() => logout()}
@@ -215,7 +195,6 @@ const Home = ({ navigation }) => {
             backgroundColor: "#EF6666",
             paddingVertical: 10,
             borderRadius: 15,
-        
           }}
         >
           <Text
@@ -226,10 +205,9 @@ const Home = ({ navigation }) => {
               fontSize: 18,
             }}
           >
-            Sair da Aplicação   X
+            Sair da Aplicação X
           </Text>
         </TouchableOpacity>
-
       </View>
     </ImageBackground>
   );

@@ -196,8 +196,8 @@ export const Form = styled.View`
 
 export const ViewHeader = styled.View`
   background-color: #3f37c9;
-  border-bottom-right-radius: 20;
-  borderbottomleftradius: 20;
+  borderBottomRightRadius: 20;
+  borderBottomLeftRadius: 20;
   align-items: center;
   height: 30%;
   justify-content: center;

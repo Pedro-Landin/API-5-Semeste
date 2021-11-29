@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   ImageBackground,
   Image,
@@ -7,7 +7,6 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
 } from "react-native";
 
 

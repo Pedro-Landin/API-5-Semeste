@@ -103,9 +103,10 @@ def create():
             x+=1 
         mongo.db.dadosbkp.update_many(
         {}, 
-        { "$unset": {  'nome': "", 'email': "", 'telefone': "",'endereco': "", 'senha': "", 'status': "", 'cod': "", 
+        { "$unset": {  'nome': "", 'telefone': "",'endereco': "", 'senha': "", 'status': "", 'cod': "", 
         'atividade': "", 'cpf': "" }}
         )      
+     
 
        
         return 'Arquivo enviado com sucesso!'
@@ -164,7 +165,7 @@ def update_user(id):
     _json = request.json
     _nome = _json['nome']
     _cpf = _json['cpf']
-    _cod = _json['cod']
+  
     _email = _json['email']
     _telefone = _json['telefone']
     _endereco = _json['endereco']
@@ -173,7 +174,7 @@ def update_user(id):
         {'id':int(id)}, {"$set":{
                                 'nome' : _nome,
                                 'cpf': _cpf, 
-                                'cod' : _cod,
+                                
                                 'email': _email,
                                 'telefone': _telefone,
                                 'endereco': _endereco,}})
@@ -249,16 +250,25 @@ def create_anuncio():
         dfa['visualizacao'] = 1 
         dfa['views'] = 0  
         dfa['id'] = 0 
-        dfa['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
+        dfa['img'] = 'https://th.bing.com/th/id/R.859796299b2bfc24f75d0dc6eb419518?rik=JNrJ%2fvPAhXR8%2fA&riu=http%3a%2f%2fauto-drive.pt%2fwp-content%2fuploads%2f2020%2f04%2f2011-ferrari-599-gto-for-sale-at-mecum-auctions-indy-2020.jpg&ehk=C3LVKXTzYarNgKOUw7NdlVGoljOEYth8V7zI4r%2bl%2bsY%3d&risl=&pid=ImgRaw&r=0'
         x=0
         dfa = pd.DataFrame(data_anuncio) 
         while x < (len(data_anuncio)):
             data_anuncio[x]['visualizacao'] = 1 
             data_anuncio[x]['views'] = 0 
             data_anuncio[x]['id'] = mongo.db.anuncios.count()
-            data_anuncio[x]['img'] = 'https://th.bing.com/th/id/R.84766ecb6e23c491e433c7ebda1ef732?rik=4kevuwyE0wQ9%2bg&riu=http%3a%2f%2fmotori.quotidiano.net%2fwp-content%2fuploads%2f2020%2f12%2fChevrolet-Camaro-La-settima-generazione-non-arriver%c3%a0-prima-del-2026.jpg&ehk=NCLj0Nmrec%2fx%2bPjN%2bXqacDBRDZ8DXu%2fn%2f3XnEcB5Dy0%3d&risl=&pid=ImgRaw&r=0'
+            data_anuncio[x]['img'] = 'https://th.bing.com/th/id/R.859796299b2bfc24f75d0dc6eb419518?rik=JNrJ%2fvPAhXR8%2fA&riu=http%3a%2f%2fauto-drive.pt%2fwp-content%2fuploads%2f2020%2f04%2f2011-ferrari-599-gto-for-sale-at-mecum-auctions-indy-2020.jpg&ehk=C3LVKXTzYarNgKOUw7NdlVGoljOEYth8V7zI4r%2bl%2bsY%3d&risl=&pid=ImgRaw&r=0'
             mongo.db.anuncios.insert_one(data_anuncio[x])
-            x+=1     
+            mongo.db.anubkp.insert_one(data_anuncio[x])
+            
+            x+=1       
+        mongo.db.anubkp.update_many(
+        {}, 
+        { "$unset": {  'cpf_anunciante': ""}}
+        )      
+    
+   
+
     return 'Arquivo enviado com sucesso!'
 
 #lista todos os anuncios
@@ -460,4 +470,4 @@ def updateVisuAnuncio(id):
      
  
 if __name__ == "__main__":
-    app.run()
+    app.run(host = "192.168.0.16", port = "5000")

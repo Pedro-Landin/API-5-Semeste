@@ -1,42 +1,34 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Button, ButtonText, SubTitle } from "../../components/styles";
+import React, { useEffect, useState } from "react";
+import { SubTitle } from "../../components/styles";
 import { StatusBar } from "expo-status-bar";
 import {
   BasicContainer,
   Item,
   ItemImage,
+  ViewContainerAnuncio,
   ItemTitle,
-  ItemText,
   ContainerInfo,
   ContainerAnuncio,
 } from "../../components/style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import SearchInput from "../../components/Input/searchInput";
 import {
-  Alert,
   FlatList,
   ScrollView,
   View,
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import { HeadContainer } from "../../components/style";
-import Header from "../../components/header";
-//import AuthContext  from "../../context/auth";
 import { useAuth } from "../../context/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as DocumentPicker from "expo-document-picker";
 
 const Ads = ({ navigation, route }) => {
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState();
-  const [arquivo, setArquivo] = useState(list );
+  const [arquivo, setArquivo] = useState(list);
   const [doc, setDoc] = useState();
   const [pausar, setPausar] = useState(false);
 
   const { user, setUser } = useAuth();
-  //const {user, setUser} = useContext(AuthContext);
-
 
   const { cpf } = user;
 
@@ -47,7 +39,7 @@ const Ads = ({ navigation, route }) => {
 
   //Rota de deletar anuncio
   const Deletion = async (id) => {
-    const res = await fetch(`http://127.0.0.1:5000/anuncios/${id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/anuncios/${id}`, {
       method: "DELETE",
     });
   };
@@ -56,7 +48,7 @@ const Ads = ({ navigation, route }) => {
   useEffect(() => {
     if (searchText === "") {
       getAnuncio(cpf);
-      // pegarValor()
+
       setList(list);
     } else {
       setList(
@@ -71,62 +63,39 @@ const Ads = ({ navigation, route }) => {
   //Rota de pegar anuncio
   const getAnuncio = async (cpf_anunciante) => {
     const res = await fetch(
-      `http://127.0.0.1:5000/listar/anuncio/${cpf_anunciante}`
+      `http://192.168.0.16:5000/listar/anuncio/${cpf_anunciante}`
     );
     const anuncios = await res.json();
     setList(anuncios);
   };
 
-
-  
   const VisuPausar = async (Id) => {
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/visu/${Id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/atualizar/visu/${Id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        visualizacao: 0
+        visualizacao: 0,
       }),
     });
     const pausar = await res.json();
     console.log(pausar);
   };
 
-  
-  
   const VisuDesPausar = async (Id) => {
-    const res = await fetch(`http://127.0.0.1:5000/atualizar/visu/${Id}`, {
+    const res = await fetch(`http://192.168.0.16:5000/atualizar/visu/${Id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        visualizacao: 1
+        visualizacao: 1,
       }),
     });
     const pausar = await res.json();
     console.log(pausar);
   };
-
-
-  const CreateAnuncio = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/create/anuncio`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-     
-    });
-    const pausar = await res.json();
-    console.log(pausar);
-  };
- // async function pegarValor(){
- //    const myuser = await AsyncStorage.getItem('user')
-
- // }
-
- // pegarValor();
 
   return (
     <ImageBackground
@@ -144,24 +113,13 @@ const Ads = ({ navigation, route }) => {
         <SubTitle>Seus Anuncios...</SubTitle>
 
         <form //Rota do banco python
-          action="http://127.0.0.1:5000/create/anuncio"
+          action="http://192.168.0.16:5000/create/anuncio"
           method="POST"
           encType="multipart/form-data"
         >
           <input type="file" id="anuncio" name="anuncio" />
           <input type="submit" defaultValue="Submit" />
         </form>
-
-        
-     {/**   <form //Rota do banco python
-      onsubmit="CreateAnuncio()"
-        
-        >
-          <input type="file" id="anuncio" name="anuncio" />
-          <input type="submit"  />
-        </form>
-
-     */ }
       </BasicContainer>
 
       <ScrollView>
@@ -178,14 +136,7 @@ const Ads = ({ navigation, route }) => {
                 <ItemImage source={item.img} />
 
                 <ContainerAnuncio>
-                  <View
-                    style={{
-                      flexDirection: "row",
-
-                      alignItems: "center",
-                      paddingHorizontal: 5,
-                    }}
-                  >
+                  <ViewContainerAnuncio>
                     <TouchableOpacity>
                       <Icon
                         onPress={() => Deletion(item._id)}
@@ -216,30 +167,25 @@ const Ads = ({ navigation, route }) => {
                     <View>{item.views}</View>
 
                     <TouchableOpacity>
-                      {item.visualizacao === 0 ?
-
-                    (
-                      <Icon
-                        onPress={() => VisuDesPausar(item.id)}
-                        name="play-pause"
-                        size={25}
-                        color="#36343A"
-                        style={{ marginLeft: 15, padding: 2 }}
-                      />
-                    ) : 
-                    (
-
-                      <Icon
-                      onPress={() => VisuPausar(item.id)}
-                      name="pause"
-                      size={25}
-                      color="#36343A"
-                      style={{ marginLeft: 15, padding: 2 }}
-                    />
-                    )}
-                      </TouchableOpacity>
-
-                  </View>
+                      {item.visualizacao === 0 ? (
+                        <Icon
+                          onPress={() => VisuDesPausar(item.id)}
+                          name="play-pause"
+                          size={25}
+                          color="#36343A"
+                          style={{ marginLeft: 15, padding: 2 }}
+                        />
+                      ) : (
+                        <Icon
+                          onPress={() => VisuPausar(item.id)}
+                          name="pause"
+                          size={25}
+                          color="#36343A"
+                          style={{ marginLeft: 15, padding: 2 }}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  </ViewContainerAnuncio>
                 </ContainerAnuncio>
               </Item>
             )}
